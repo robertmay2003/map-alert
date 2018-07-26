@@ -1,4 +1,32 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14135" systemVersion="17D47" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
-    <elements/>
+    <entity name="Alarm" representedClassName="Alarm" syncable="YES" codeGenerationType="class">
+        <attribute name="active" optional="YES" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="daily" optional="YES" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="latitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="longitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="notificationMessage" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="notificationRepeats" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="time" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="DistanceFromLocation" representedClassName="DistanceFromLocation" parentEntity="Alarm" syncable="YES" codeGenerationType="class">
+        <attribute name="distance" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="maxTime" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+    </entity>
+    <entity name="SetTime" representedClassName="SetTime" parentEntity="Alarm" syncable="YES" codeGenerationType="class">
+        <attribute name="alarmTime" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="eventTime" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="transportation" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="TimeFromLocationAlarm" representedClassName="TimeFromLocationAlarm" parentEntity="Alarm" syncable="YES" codeGenerationType="class">
+        <attribute name="margin" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="transport" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="Alarm" positionX="-54" positionY="9" width="128" height="165"/>
+        <element name="TimeFromLocationAlarm" positionX="-36" positionY="81" width="128" height="75"/>
+        <element name="DistanceFromLocation" positionX="-18" positionY="99" width="128" height="75"/>
+        <element name="SetTime" positionX="0" positionY="108" width="128" height="90"/>
+    </elements>
 </model>

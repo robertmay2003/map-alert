@@ -29,13 +29,13 @@ extension UIViewController {
         if let keyboardFrame: NSValue = notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue {
             let keyboardRectangle = keyboardFrame.cgRectValue
             let keyboardHeight = keyboardRectangle.height
-            view.center.y = 0 - keyboardHeight
+            view.center.y = UIScreen.main.bounds.height / 2 - keyboardHeight
         }
     }
     
     
     @objc func keyBoardWillHide(notification: NSNotification) {
-        view.center.y = 0
+        view.center.y = UIScreen.main.bounds.height / 2
     }
 
 }

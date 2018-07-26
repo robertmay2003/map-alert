@@ -19,35 +19,43 @@ class ListAlarmsViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
     }
-
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        alarms = CoreDataHelper.retrieveAlarms()
+        alarmTableView.reloadData()
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        guard let identifier = segue.identifier else { return }
+        guard let identifier = segue.identifier else {return}
         
         switch identifier {
-        case "SaveSetTimeAlarm":
-            alarms = CoreDataHelper.retrieveAlarms()
-            alarmTableView.reloadData()
+        case "EditSetTimeAlarm":
+            guard let indexPath = alarmTableView.indexPathForSelectedRow else { return }
+            guard let alarm = alarms[indexPath.row] as? SetTime else {
+                print("Unexpected alarm type in SetTime cell")
+                return
+            }
+            let destination = segue.destination as! EditSetTimeAlarmViewController
+            destination.alarm = alarm
         default:
-            assertionFailure("Unexpected segue: \(identifier)")
+            print("Unexpected segue with identifier: \(identifier)")
         }
+    }
+    
+    @IBAction func unwindWithSegue(_ segue: UIStoryboardSegue) {
     }
 }
 
 extension ListAlarmsViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
-    }
-    
-    
-    func numberOfSections(in tableView: UITableView) -> Int {
         return alarms.count
     }
-    
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let alarm = alarms[indexPath.row]
@@ -55,7 +63,8 @@ extension ListAlarmsViewController: UITableViewDataSource {
         switch String(describing: type(of: alarm)) {
         case "SetTime":
             let cell = tableView.dequeueReusableCell(withIdentifier: "SetTimeCell") as! SetTimeCell
-            cell.configure(to: alarm as! SetTime)
+            cell.alarm = alarm as? SetTime
+            cell.configure()
             return cell
         default:
             assertionFailure("Unexpected alarm type: \(type(of: alarm))")
@@ -68,6 +77,6 @@ extension ListAlarmsViewController: UITableViewDataSource {
 extension ListAlarmsViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 70
+        return 100
     }
 }

@@ -72,6 +72,15 @@ extension ListAlarmsViewController: UITableViewDataSource {
             return cell
         }
     }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            CoreDataHelper.delete(alarm: alarms[indexPath.row]) {
+                self.alarms = CoreDataHelper.retrieveAlarms()
+                tableView.reloadData()
+            }
+        }
+    }
 }
 
 extension ListAlarmsViewController: UITableViewDelegate {

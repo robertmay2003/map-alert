@@ -8,6 +8,7 @@
 
 import UIKit
 import GoogleMaps
+import UserNotifications
 
 class SetTimeCell: UITableViewCell {
     @IBOutlet weak var titleLabel: UILabel!
@@ -43,6 +44,7 @@ class SetTimeCell: UITableViewCell {
         guard let alarm = alarm else { return }
         alarm.active = activeSwitch.isOn
         activeStatusLabel.text = alarm.active ? "Active" : "Inactive"
+        alarm.setNotification()
         CoreDataHelper.saveAlarms()
     }
 }

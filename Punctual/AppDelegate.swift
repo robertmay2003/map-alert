@@ -10,19 +10,53 @@ import UIKit
 import CoreData
 import GoogleMaps
 import GooglePlaces
+import Firebase
+import FirebaseDatabase
+import FirebaseInstanceID
+import FirebaseMessaging
 import UserNotifications
+import AudioToolbox
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate, MessagingDelegate{
 
     var window: UIWindow?
-
+    var ringingAlarm: Alarm?
+    
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
-        GMSServices.provideAPIKey("AIzaSyDMDlm103ianwAd6M9E4KDtslxlcfBSD5U")
-        GMSPlacesClient.provideAPIKey("AIzaSyDMDlm103ianwAd6M9E4KDtslxlcfBSD5U")
-        registerForPushNotifications()
+        GMSServices.provideAPIKey("AIzaSyDrBVdxezWqWJJLDbFZZpDHAjwc-kLMGqA")
+        GMSPlacesClient.provideAPIKey("AIzaSyDrBVdxezWqWJJLDbFZZpDHAjwc-kLMGqA")
+
+        
+        if #available(iOS 10.0, *) {
+            // For iOS 10 display notification (sent via APNS)
+            UNUserNotificationCenter.current().delegate = self
+            let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
+            UNUserNotificationCenter.current().requestAuthorization(
+                options: authOptions,
+                completionHandler: {_, _ in })
+            // For iOS 10 data message (sent via FCM
+            Messaging.messaging().delegate = self
+            UNUserNotificationCenter.current().delegate = self
+        } else {
+            let settings: UIUserNotificationSettings =
+                UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil)
+            application.registerUserNotificationSettings(settings)
+        }
+        
+        application.registerForRemoteNotifications()
+        
+        FirebaseApp.configure()
+        
+        InstanceID.instanceID().instanceID { (result, error) in
+            if let error = error {
+                print("Error fetching remote instange ID: \(error)")
+            } else if let result = result {
+                print("Remote instance ID token: \(result.token)")
+            }
+        }
         
         return true
     }
@@ -39,6 +73,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationWillEnterForeground(_ application: UIApplication) {
         // Called as part of the transition from the background to the active state; here you can undo many of the changes made on entering the background.
+        ringingAlarm = getMostRecentAlarm()
+        if let current = ringingAlarm {
+            if let setTime = current as? SetTime {
+                showSetTime(alarm: setTime.asDict())
+            } else {
+                // No implementaion here yet
+            }
+        }
     }
 
     func applicationDidBecomeActive(_ application: UIApplication) {
@@ -94,38 +136,121 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
     }
     
-    func registerForPushNotifications() {
-        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) {
-            (granted, error) in
-            print("Permission granted: \(granted)")
-            
-            guard granted else { return }
-            self.getNotificationSettings()
-        }
-    }
-    
-    func getNotificationSettings() {
-        UNUserNotificationCenter.current().getNotificationSettings { (settings) in
-            print("Notification settings: \(settings)")
-            guard settings.authorizationStatus == .authorized else { return }
-            UIApplication.shared.registerForRemoteNotifications()
-        }
-    }
-    
-    func application(_ application: UIApplication,
-                     didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-        let tokenParts = deviceToken.map { data -> String in
-            return String(format: "%02.2hhx", data)
-        }
-        
-        let token = tokenParts.joined()
-        print("Device Token: \(token)")
-    }
-    
-    func application(_ application: UIApplication,
-                     didFailToRegisterForRemoteNotificationsWithError error: Error) {
-        print("Failed to register: \(error)")
+    func applicationReceivedRemoteMessage(_ remoteMessage: MessagingRemoteMessage) {
+        print(remoteMessage.appData)
     }
 
+    func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String) {
+        print("Firebase registration token: \(fcmToken)")
+        let emptyUser = [fcmToken: ["initiated": true]]
+        Database.database().reference().updateChildValues(emptyUser)
+        
+        let dataDict:[String: Any] = [
+            "token": fcmToken,
+            "currentAlarms": []
+        ]
+        NotificationCenter.default.post(name: Notification.Name("FCMToken"), object: nil, userInfo: dataDict)
+        // TODO: If necessary send token to application server.
+        // Note: This callback is fired at each app startup and whenever a new token is generated.
+    }
+    
+    // When a notification is recieved while app is open
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        //Handle the notification
+        //This will get the text sent in your notification
+        
+        //This works for iphone 7 and above using haptic feedback
+        let feedbackGenerator = UINotificationFeedbackGenerator()
+        feedbackGenerator.notificationOccurred(.success)
+        
+        //This works for all devices. Choose one or the other.
+        AudioServicesPlayAlertSoundWithCompletion(SystemSoundID(kSystemSoundID_Vibrate), nil)
+        
+        if let alarm = notification.request.content.userInfo["alarm"] as? [String: Any] {
+            showSetTime(alarm: alarm)
+        }
+    }
+    
+    // When a notification is tapped
+    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+        //Handle the notification
+        print("did receive")
+        let body = response.notification.request.content.body
+        if let alarm = response.notification.request.content.userInfo["alarm"] as? [String: Any] {
+            if let type = alarm["type"] as? String {
+                if type == "ST" {
+                    showSetTime(alarm: alarm)
+                } else {
+                    // no implementation yet
+                }
+            }
+        }
+        completionHandler()
+        
+    }
+
+    
+    func getMostRecentAlarm() -> Alarm? {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        let today = formatter.string(from: Date())
+        let alarms = CoreDataHelper.retrieveAlarms()
+        if alarms.count > 0 {
+            var mostRecent = alarms[0]
+            for alarm in alarms[1..<alarms.count] {
+                print("comparing alarm \(alarm.title) to alarm \(mostRecent.title!)")
+                if let alarmEvent = alarm.eventTime,
+                    let recentEvent = mostRecent.eventTime {
+                    if alarmEvent > recentEvent && alarmEvent < Date() {
+                        if let dateShown = alarm.dateShown {
+                            if (alarm.daily && formatter.string(from: dateShown) != today) {
+                                mostRecent = alarm
+                            }
+                        } else {
+                            if (!alarm.daily && alarm.dateShown == nil && alarm.active) {
+                                mostRecent = alarm
+                            }
+                        }
+                    }
+                }
+            }
+            if let dateShown = mostRecent.dateShown {
+                if (mostRecent.daily && formatter.string(from: dateShown) != today) && mostRecent.active {
+                    return mostRecent
+                } else {
+                    return nil
+                }
+            } else if (!mostRecent.daily && mostRecent.dateShown == nil) && mostRecent.active {
+                return mostRecent
+            } else {
+                return nil
+            }
+        } else {
+            return nil
+        }
+    }
+    
+    private func showSetTime(alarm: [String: Any]) {
+        print("peanut butter jelly time")
+        let storyboard = UIStoryboard(name: "SetTimeDisplay", bundle: .main)
+        if let initialViewController = storyboard.instantiateInitialViewController() as? DisplaySetTimeAlarmViewController {
+            initialViewController.alarm = alarm
+            initialViewController.delegate = self
+            window?.rootViewController = initialViewController
+            window?.makeKeyAndVisible()
+        }
+    }
+}
+
+extension AppDelegate: DisplaySetTimeAlarmViewControllerDelegate {
+    
+    func toMainScreen() {
+        let storyboard = UIStoryboard(name: "Main", bundle: .main)
+        if let initialViewController = storyboard.instantiateInitialViewController() as? UINavigationController {
+            print("leaving alarm view")
+            window?.rootViewController = initialViewController
+            window?.makeKeyAndVisible()
+        }
+    }
 }
 

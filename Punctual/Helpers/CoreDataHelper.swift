@@ -19,14 +19,18 @@ struct CoreDataHelper {
         let persistentContainer = appDelegate.persistentContainer
         let context = persistentContainer.viewContext
 
-        print("did something with core data")
         return context
     }()
 
     static func newSTAlarm() -> SetTime {
         let alrm = NSEntityDescription.insertNewObject(forEntityName: "SetTime", into: context) as! SetTime
 
-        print("did something with core data")
+        return alrm
+    }
+    
+    static func newTFLAlarm() -> TimeFromLocation {
+        let alrm = NSEntityDescription.insertNewObject(forEntityName: "TimeFromLocation", into: context) as! TimeFromLocation
+        
         return alrm
     }
 
@@ -36,18 +40,16 @@ struct CoreDataHelper {
         } catch let error {
             print("Could not save \(error.localizedDescription)")
         }
-        print("did something with core data")
     }
 
-    static func delete(note: Alarm) {
-        context.delete(note)
+    static func delete(alarm: Alarm, completion: @escaping () -> Void) {
+        context.delete(alarm)
 
         saveAlarms()
-        print("did something with core data")
+        completion()
     }
 
     static func retrieveAlarms() -> [Alarm] {
-        print("did something with core data")
         do {
             let fetchRequest = NSFetchRequest<Alarm>(entityName: "Alarm")
             let results = try context.fetch(fetchRequest)
@@ -61,9 +63,26 @@ struct CoreDataHelper {
     }
 
     static func reset(notes: [Alarm]) {
-        print("did something with core data")
         for note in notes {
             context.delete(note)
         }
+    }
+    
+    static func alarmWasShown(with id: Int64) {
+        for alarm in retrieveAlarms() {
+            if alarm.id == id {
+                alarm.dateShown = Date()
+            }
+        }
+        saveAlarms()
+    }
+    
+    static func retrieveAlarm(with id: Int64) -> Alarm? {
+        for alarm in retrieveAlarms() {
+            if alarm.id == id {
+                return alarm
+            }
+        }
+        return nil
     }
 }

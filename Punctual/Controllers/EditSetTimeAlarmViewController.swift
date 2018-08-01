@@ -9,6 +9,7 @@
 import UIKit
 import GoogleMaps
 import GooglePlaces
+import UserNotifications
 
 class EditSetTimeAlarmViewController: UIViewController {
     @IBOutlet weak var titleTextField: UITextField!
@@ -30,10 +31,12 @@ class EditSetTimeAlarmViewController: UIViewController {
     let locationManager = CLLocationManager()
     var mapMarker = GMSMarker()
     var alarm: SetTime?
+    let center = UNUserNotificationCenter.current()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        
         if alarm == nil {
             locationMapView?.isMyLocationEnabled = true
             locationMapView.settings.myLocationButton = true
@@ -64,7 +67,7 @@ class EditSetTimeAlarmViewController: UIViewController {
             activeSwitch.isOn = alarm.active
             dailySwitch.isOn = alarm.daily
             
-            if let index = ["drive", "bike", "walk"].index(of: alarm.transportation) {
+            if let index = ["driving", "bicycling", "walking"].index(of: alarm.transportation) {
                 transportSegmentedControl.selectedSegmentIndex = Int(index)
             }
             
@@ -111,11 +114,15 @@ class EditSetTimeAlarmViewController: UIViewController {
                 repetitions = reps2
             }
         }
-        guard let reps = Int(repetitions) else {
+        guard var reps = Int(repetitions) else {
             print("unexpected nil in reps")
             return false
         }
-        let modeOfTransport = ["drive", "bike", "walk"][transportSegmentedControl.selectedSegmentIndex]
+        if reps > 4 {
+            reps = 4
+            repetitionsTextField.text = "4"
+        }
+        let modeOfTransport = ["driving", "bicycling", "walking"][transportSegmentedControl.selectedSegmentIndex]
         var message = ""
         if let customMessage = customMessageTextField.text {
             let spaceCount = customMessage.components(separatedBy: " ").count - 1
@@ -131,6 +138,9 @@ class EditSetTimeAlarmViewController: UIViewController {
         let lat = mapMarker.position.latitude
         if alarm == nil {
             alarm = CoreDataHelper.newSTAlarm()
+            if let alarm = alarm {
+                alarm.id = Int64(Alarm.fetchId())
+            }
         }
         if let alarm = alarm {
             alarm.title = title
@@ -143,7 +153,14 @@ class EditSetTimeAlarmViewController: UIViewController {
             alarm.notificationMessage = message
             alarm.latitude = lat
             alarm.longitude = long
+            if alarmTime > Date() {
+                alarm.dateShown = nil
+            }
+    
             CoreDataHelper.saveAlarms()
+            
+            // Set up notification
+            alarm.setNotification()
         }
         return true
     }
@@ -180,10 +197,10 @@ extension EditSetTimeAlarmViewController: CLLocationManagerDelegate {
             return
         }
         if alarm == nil {
-            locationManager.startUpdatingLocation()
-            
             locationMapView.isMyLocationEnabled = true
             locationMapView.settings.myLocationButton = true
+            
+            locationManager.startUpdatingLocation()
         }
     }
     

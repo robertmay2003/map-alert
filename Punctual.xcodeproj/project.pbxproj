@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		184BD2BC4768B33FF0350D37 /* Pods_Punctual.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4312F501F3F58A220F80DB3C /* Pods_Punctual.framework */; };
+		FA7847E7210BB4F700A7D0CF /* Alarm+AlarmID.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA7847E6210BB4F700A7D0CF /* Alarm+AlarmID.swift */; };
+		FA7847E8210BB84600A7D0CF /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = FA7847E0210AAB9400A7D0CF /* GoogleService-Info.plist */; };
 		FAA8A04121063F13008F0491 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAA8A04021063F13008F0491 /* AppDelegate.swift */; };
 		FAA8A04321063F13008F0491 /* ListAlarmsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAA8A04221063F13008F0491 /* ListAlarmsViewController.swift */; };
 		FAA8A04621063F13008F0491 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FAA8A04421063F13008F0491 /* Main.storyboard */; };
@@ -15,8 +17,15 @@
 		FAA8A04B21063F14008F0491 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FAA8A04921063F14008F0491 /* LaunchScreen.storyboard */; };
 		FAA8A05C210644E2008F0491 /* CoreDataHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAA8A05B210644E2008F0491 /* CoreDataHelper.swift */; };
 		FAA8A05E2106457A008F0491 /* GoogleMapsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAA8A05D2106457A008F0491 /* GoogleMapsService.swift */; };
+		FAD035692111165600A72243 /* SetTime+setNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD035682111165600A72243 /* SetTime+setNotification.swift */; };
+		FAD0356B21122BA600A72243 /* EditTimeFromLocationAlarmViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD0356A21122BA600A72243 /* EditTimeFromLocationAlarmViewController.swift */; };
+		FAD0356D21124D1500A72243 /* TimeFromLocation+asDict.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD0356C21124D1500A72243 /* TimeFromLocation+asDict.swift */; };
+		FAD0356F21124D5C00A72243 /* TimFromLocation+setNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD0356E21124D5C00A72243 /* TimFromLocation+setNotification.swift */; };
 		FAE4EC702109197300A0CC1D /* GMSTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAE4EC6F2109197300A0CC1D /* GMSTestViewController.swift */; };
 		FAE4EC72210924D400A0CC1D /* UIViewController+keyboardControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAE4EC71210924D400A0CC1D /* UIViewController+keyboardControl.swift */; };
+		FAE5C18C210F8827007BAE81 /* SetTimeDisplay.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FAE5C18B210F8827007BAE81 /* SetTimeDisplay.storyboard */; };
+		FAE5C18E210F9859007BAE81 /* DisplaySetTimeAlarmViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAE5C18D210F9859007BAE81 /* DisplaySetTimeAlarmViewController.swift */; };
+		FAE5C190210F9E6D007BAE81 /* SetTime+asDict.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAE5C18F210F9E6D007BAE81 /* SetTime+asDict.swift */; };
 		FAFCED672106705A00A7204F /* TimeFromLocationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAFCED662106705A00A7204F /* TimeFromLocationCell.swift */; };
 		FAFCED70210687C600A7204F /* Punctual.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = FAFCED6E210687C600A7204F /* Punctual.xcdatamodeld */; };
 		FAFCED732106E07200A7204F /* AlarmTypeSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAFCED722106E07200A7204F /* AlarmTypeSelectionViewController.swift */; };
@@ -28,6 +37,8 @@
 		4312F501F3F58A220F80DB3C /* Pods_Punctual.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Punctual.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		93BCF9304B187269B94FDE37 /* Pods-Punctual.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Punctual.release.xcconfig"; path = "Pods/Target Support Files/Pods-Punctual/Pods-Punctual.release.xcconfig"; sourceTree = "<group>"; };
 		A39145EC361C157C022BC1FD /* Pods-Punctual.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Punctual.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Punctual/Pods-Punctual.debug.xcconfig"; sourceTree = "<group>"; };
+		FA7847E0210AAB9400A7D0CF /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		FA7847E6210BB4F700A7D0CF /* Alarm+AlarmID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Alarm+AlarmID.swift"; sourceTree = "<group>"; };
 		FAA8A03D21063F13008F0491 /* Punctual.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Punctual.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FAA8A04021063F13008F0491 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		FAA8A04221063F13008F0491 /* ListAlarmsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListAlarmsViewController.swift; sourceTree = "<group>"; };
@@ -38,8 +49,15 @@
 		FAA8A05B210644E2008F0491 /* CoreDataHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataHelper.swift; sourceTree = "<group>"; };
 		FAA8A05D2106457A008F0491 /* GoogleMapsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleMapsService.swift; sourceTree = "<group>"; };
 		FAC91F15210A3C8F00B0041D /* Punctual.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Punctual.entitlements; sourceTree = "<group>"; };
+		FAD035682111165600A72243 /* SetTime+setNotification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SetTime+setNotification.swift"; sourceTree = "<group>"; };
+		FAD0356A21122BA600A72243 /* EditTimeFromLocationAlarmViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditTimeFromLocationAlarmViewController.swift; sourceTree = "<group>"; };
+		FAD0356C21124D1500A72243 /* TimeFromLocation+asDict.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TimeFromLocation+asDict.swift"; sourceTree = "<group>"; };
+		FAD0356E21124D5C00A72243 /* TimFromLocation+setNotification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TimFromLocation+setNotification.swift"; sourceTree = "<group>"; };
 		FAE4EC6F2109197300A0CC1D /* GMSTestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GMSTestViewController.swift; sourceTree = "<group>"; };
 		FAE4EC71210924D400A0CC1D /* UIViewController+keyboardControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+keyboardControl.swift"; sourceTree = "<group>"; };
+		FAE5C18B210F8827007BAE81 /* SetTimeDisplay.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = SetTimeDisplay.storyboard; sourceTree = "<group>"; };
+		FAE5C18D210F9859007BAE81 /* DisplaySetTimeAlarmViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplaySetTimeAlarmViewController.swift; sourceTree = "<group>"; };
+		FAE5C18F210F9E6D007BAE81 /* SetTime+asDict.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SetTime+asDict.swift"; sourceTree = "<group>"; };
 		FAFCED662106705A00A7204F /* TimeFromLocationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeFromLocationCell.swift; sourceTree = "<group>"; };
 		FAFCED6F210687C600A7204F /* Punctual.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Punctual.xcdatamodel; sourceTree = "<group>"; };
 		FAFCED722106E07200A7204F /* AlarmTypeSelectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmTypeSelectionViewController.swift; sourceTree = "<group>"; };
@@ -108,7 +126,6 @@
 				FAA8A0522106405B008F0491 /* Storyboards */,
 				FAA8A04021063F13008F0491 /* AppDelegate.swift */,
 				FAA8A04721063F14008F0491 /* Assets.xcassets */,
-				FAA8A04921063F14008F0491 /* LaunchScreen.storyboard */,
 				FAFCED6E210687C600A7204F /* Punctual.xcdatamodeld */,
 			);
 			path = Punctual;
@@ -117,7 +134,9 @@
 		FAA8A0522106405B008F0491 /* Storyboards */ = {
 			isa = PBXGroup;
 			children = (
+				FAA8A04921063F14008F0491 /* LaunchScreen.storyboard */,
 				FAA8A04421063F13008F0491 /* Main.storyboard */,
+				FAE5C18B210F8827007BAE81 /* SetTimeDisplay.storyboard */,
 			);
 			path = Storyboards;
 			sourceTree = "<group>";
@@ -129,6 +148,8 @@
 				FAFCED722106E07200A7204F /* AlarmTypeSelectionViewController.swift */,
 				FAFCED762107A52500A7204F /* EditSetTimeAlarmViewController.swift */,
 				FAE4EC6F2109197300A0CC1D /* GMSTestViewController.swift */,
+				FAE5C18D210F9859007BAE81 /* DisplaySetTimeAlarmViewController.swift */,
+				FAD0356A21122BA600A72243 /* EditTimeFromLocationAlarmViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -153,6 +174,7 @@
 		FAA8A056210640B2008F0491 /* Supporting */ = {
 			isa = PBXGroup;
 			children = (
+				FA7847E0210AAB9400A7D0CF /* GoogleService-Info.plist */,
 				FAA8A04C21063F14008F0491 /* Info.plist */,
 			);
 			path = Supporting;
@@ -177,6 +199,11 @@
 			isa = PBXGroup;
 			children = (
 				FAE4EC71210924D400A0CC1D /* UIViewController+keyboardControl.swift */,
+				FA7847E6210BB4F700A7D0CF /* Alarm+AlarmID.swift */,
+				FAE5C18F210F9E6D007BAE81 /* SetTime+asDict.swift */,
+				FAD035682111165600A72243 /* SetTime+setNotification.swift */,
+				FAD0356C21124D1500A72243 /* TimeFromLocation+asDict.swift */,
+				FAD0356E21124D5C00A72243 /* TimFromLocation+setNotification.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -193,6 +220,7 @@
 				FAA8A03A21063F13008F0491 /* Frameworks */,
 				FAA8A03B21063F13008F0491 /* Resources */,
 				F62144B2FFDFFF48FE343144 /* [CP] Copy Pods Resources */,
+				B19EC083CCFC459BFDBC89C8 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -216,6 +244,9 @@
 					FAA8A03C21063F13008F0491 = {
 						CreatedOnToolsVersion = 9.4.1;
 						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
 							com.apple.Push = {
 								enabled = 1;
 							};
@@ -246,7 +277,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FA7847E8210BB84600A7D0CF /* GoogleService-Info.plist in Resources */,
 				FAA8A04B21063F14008F0491 /* LaunchScreen.storyboard in Resources */,
+				FAE5C18C210F8827007BAE81 /* SetTimeDisplay.storyboard in Resources */,
 				FAA8A04821063F14008F0491 /* Assets.xcassets in Resources */,
 				FAA8A04621063F13008F0491 /* Main.storyboard in Resources */,
 			);
@@ -255,6 +288,34 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		B19EC083CCFC459BFDBC89C8 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-Punctual/Pods-Punctual-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
+				"${BUILT_PRODUCTS_DIR}/GoogleToolboxForMac/GoogleToolboxForMac.framework",
+				"${BUILT_PRODUCTS_DIR}/Protobuf/Protobuf.framework",
+				"${BUILT_PRODUCTS_DIR}/SwiftyJSON/SwiftyJSON.framework",
+				"${BUILT_PRODUCTS_DIR}/leveldb-library/leveldb.framework",
+				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleToolboxForMac.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Protobuf.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftyJSON.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/leveldb.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Punctual/Pods-Punctual-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		E11EA772A3CB1BDC374A6B5C /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -302,14 +363,21 @@
 			files = (
 				FAFCED732106E07200A7204F /* AlarmTypeSelectionViewController.swift in Sources */,
 				FAFCED672106705A00A7204F /* TimeFromLocationCell.swift in Sources */,
+				FAD035692111165600A72243 /* SetTime+setNotification.swift in Sources */,
+				FAD0356D21124D1500A72243 /* TimeFromLocation+asDict.swift in Sources */,
 				FAE4EC702109197300A0CC1D /* GMSTestViewController.swift in Sources */,
 				FAA8A05E2106457A008F0491 /* GoogleMapsService.swift in Sources */,
 				FAFCED772107A52500A7204F /* EditSetTimeAlarmViewController.swift in Sources */,
+				FA7847E7210BB4F700A7D0CF /* Alarm+AlarmID.swift in Sources */,
 				FAA8A04321063F13008F0491 /* ListAlarmsViewController.swift in Sources */,
 				FAA8A05C210644E2008F0491 /* CoreDataHelper.swift in Sources */,
+				FAD0356B21122BA600A72243 /* EditTimeFromLocationAlarmViewController.swift in Sources */,
 				FAA8A04121063F13008F0491 /* AppDelegate.swift in Sources */,
+				FAE5C190210F9E6D007BAE81 /* SetTime+asDict.swift in Sources */,
+				FAD0356F21124D5C00A72243 /* TimFromLocation+setNotification.swift in Sources */,
 				FAFCED70210687C600A7204F /* Punctual.xcdatamodeld in Sources */,
 				FAE4EC72210924D400A0CC1D /* UIViewController+keyboardControl.swift in Sources */,
+				FAE5C18E210F9859007BAE81 /* DisplaySetTimeAlarmViewController.swift in Sources */,
 				FAFCED752106E23500A7204F /* SetTimeCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -463,7 +531,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.makeschool.Punctual;
+				PRODUCT_BUNDLE_IDENTIFIER = com.robertmay.Punctual;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -483,7 +551,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.makeschool.Punctual;
+				PRODUCT_BUNDLE_IDENTIFIER = com.robertmay.Punctual;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

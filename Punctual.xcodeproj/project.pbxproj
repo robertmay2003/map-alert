@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		184BD2BC4768B33FF0350D37 /* Pods_Punctual.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4312F501F3F58A220F80DB3C /* Pods_Punctual.framework */; };
 		FA7847E7210BB4F700A7D0CF /* Alarm+AlarmID.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA7847E6210BB4F700A7D0CF /* Alarm+AlarmID.swift */; };
-		FA7847E8210BB84600A7D0CF /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = FA7847E0210AAB9400A7D0CF /* GoogleService-Info.plist */; };
 		FAA8A04121063F13008F0491 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAA8A04021063F13008F0491 /* AppDelegate.swift */; };
 		FAA8A04321063F13008F0491 /* ListAlarmsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAA8A04221063F13008F0491 /* ListAlarmsViewController.swift */; };
 		FAA8A04621063F13008F0491 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FAA8A04421063F13008F0491 /* Main.storyboard */; };
@@ -20,11 +19,15 @@
 		FAD035692111165600A72243 /* SetTime+setNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD035682111165600A72243 /* SetTime+setNotification.swift */; };
 		FAD0356B21122BA600A72243 /* EditTimeFromLocationAlarmViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD0356A21122BA600A72243 /* EditTimeFromLocationAlarmViewController.swift */; };
 		FAD0356D21124D1500A72243 /* TimeFromLocation+asDict.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD0356C21124D1500A72243 /* TimeFromLocation+asDict.swift */; };
-		FAD0356F21124D5C00A72243 /* TimFromLocation+setNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD0356E21124D5C00A72243 /* TimFromLocation+setNotification.swift */; };
+		FAD0356F21124D5C00A72243 /* TimeFromLocation+setNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD0356E21124D5C00A72243 /* TimeFromLocation+setNotification.swift */; };
+		FAD0357121127BAD00A72243 /* TimeFromLocation+updatingAlarms.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD0357021127BAD00A72243 /* TimeFromLocation+updatingAlarms.swift */; };
+		FAD035732112811000A72243 /* IdentifiedMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD035722112811000A72243 /* IdentifiedMapView.swift */; };
+		FAD03575211283A600A72243 /* IdentifiedLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD03574211283A600A72243 /* IdentifiedLocationManager.swift */; };
+		FAD0357D2114FC9500A72243 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = FAD0357C2114FC9500A72243 /* GoogleService-Info.plist */; };
 		FAE4EC702109197300A0CC1D /* GMSTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAE4EC6F2109197300A0CC1D /* GMSTestViewController.swift */; };
 		FAE4EC72210924D400A0CC1D /* UIViewController+keyboardControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAE4EC71210924D400A0CC1D /* UIViewController+keyboardControl.swift */; };
-		FAE5C18C210F8827007BAE81 /* SetTimeDisplay.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FAE5C18B210F8827007BAE81 /* SetTimeDisplay.storyboard */; };
-		FAE5C18E210F9859007BAE81 /* DisplaySetTimeAlarmViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAE5C18D210F9859007BAE81 /* DisplaySetTimeAlarmViewController.swift */; };
+		FAE5C18C210F8827007BAE81 /* DisplayAlarm.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FAE5C18B210F8827007BAE81 /* DisplayAlarm.storyboard */; };
+		FAE5C18E210F9859007BAE81 /* DisplayAlarmViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAE5C18D210F9859007BAE81 /* DisplayAlarmViewController.swift */; };
 		FAE5C190210F9E6D007BAE81 /* SetTime+asDict.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAE5C18F210F9E6D007BAE81 /* SetTime+asDict.swift */; };
 		FAFCED672106705A00A7204F /* TimeFromLocationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAFCED662106705A00A7204F /* TimeFromLocationCell.swift */; };
 		FAFCED70210687C600A7204F /* Punctual.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = FAFCED6E210687C600A7204F /* Punctual.xcdatamodeld */; };
@@ -37,7 +40,6 @@
 		4312F501F3F58A220F80DB3C /* Pods_Punctual.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Punctual.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		93BCF9304B187269B94FDE37 /* Pods-Punctual.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Punctual.release.xcconfig"; path = "Pods/Target Support Files/Pods-Punctual/Pods-Punctual.release.xcconfig"; sourceTree = "<group>"; };
 		A39145EC361C157C022BC1FD /* Pods-Punctual.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Punctual.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Punctual/Pods-Punctual.debug.xcconfig"; sourceTree = "<group>"; };
-		FA7847E0210AAB9400A7D0CF /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		FA7847E6210BB4F700A7D0CF /* Alarm+AlarmID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Alarm+AlarmID.swift"; sourceTree = "<group>"; };
 		FAA8A03D21063F13008F0491 /* Punctual.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Punctual.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FAA8A04021063F13008F0491 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -52,11 +54,15 @@
 		FAD035682111165600A72243 /* SetTime+setNotification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SetTime+setNotification.swift"; sourceTree = "<group>"; };
 		FAD0356A21122BA600A72243 /* EditTimeFromLocationAlarmViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditTimeFromLocationAlarmViewController.swift; sourceTree = "<group>"; };
 		FAD0356C21124D1500A72243 /* TimeFromLocation+asDict.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TimeFromLocation+asDict.swift"; sourceTree = "<group>"; };
-		FAD0356E21124D5C00A72243 /* TimFromLocation+setNotification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TimFromLocation+setNotification.swift"; sourceTree = "<group>"; };
+		FAD0356E21124D5C00A72243 /* TimeFromLocation+setNotification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TimeFromLocation+setNotification.swift"; sourceTree = "<group>"; };
+		FAD0357021127BAD00A72243 /* TimeFromLocation+updatingAlarms.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TimeFromLocation+updatingAlarms.swift"; sourceTree = "<group>"; };
+		FAD035722112811000A72243 /* IdentifiedMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentifiedMapView.swift; sourceTree = "<group>"; };
+		FAD03574211283A600A72243 /* IdentifiedLocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentifiedLocationManager.swift; sourceTree = "<group>"; };
+		FAD0357C2114FC9500A72243 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		FAE4EC6F2109197300A0CC1D /* GMSTestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GMSTestViewController.swift; sourceTree = "<group>"; };
 		FAE4EC71210924D400A0CC1D /* UIViewController+keyboardControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+keyboardControl.swift"; sourceTree = "<group>"; };
-		FAE5C18B210F8827007BAE81 /* SetTimeDisplay.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = SetTimeDisplay.storyboard; sourceTree = "<group>"; };
-		FAE5C18D210F9859007BAE81 /* DisplaySetTimeAlarmViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplaySetTimeAlarmViewController.swift; sourceTree = "<group>"; };
+		FAE5C18B210F8827007BAE81 /* DisplayAlarm.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = DisplayAlarm.storyboard; sourceTree = "<group>"; };
+		FAE5C18D210F9859007BAE81 /* DisplayAlarmViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayAlarmViewController.swift; sourceTree = "<group>"; };
 		FAE5C18F210F9E6D007BAE81 /* SetTime+asDict.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SetTime+asDict.swift"; sourceTree = "<group>"; };
 		FAFCED662106705A00A7204F /* TimeFromLocationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeFromLocationCell.swift; sourceTree = "<group>"; };
 		FAFCED6F210687C600A7204F /* Punctual.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Punctual.xcdatamodel; sourceTree = "<group>"; };
@@ -136,7 +142,7 @@
 			children = (
 				FAA8A04921063F14008F0491 /* LaunchScreen.storyboard */,
 				FAA8A04421063F13008F0491 /* Main.storyboard */,
-				FAE5C18B210F8827007BAE81 /* SetTimeDisplay.storyboard */,
+				FAE5C18B210F8827007BAE81 /* DisplayAlarm.storyboard */,
 			);
 			path = Storyboards;
 			sourceTree = "<group>";
@@ -148,8 +154,8 @@
 				FAFCED722106E07200A7204F /* AlarmTypeSelectionViewController.swift */,
 				FAFCED762107A52500A7204F /* EditSetTimeAlarmViewController.swift */,
 				FAE4EC6F2109197300A0CC1D /* GMSTestViewController.swift */,
-				FAE5C18D210F9859007BAE81 /* DisplaySetTimeAlarmViewController.swift */,
 				FAD0356A21122BA600A72243 /* EditTimeFromLocationAlarmViewController.swift */,
+				FAE5C18D210F9859007BAE81 /* DisplayAlarmViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -174,7 +180,7 @@
 		FAA8A056210640B2008F0491 /* Supporting */ = {
 			isa = PBXGroup;
 			children = (
-				FA7847E0210AAB9400A7D0CF /* GoogleService-Info.plist */,
+				FAD0357C2114FC9500A72243 /* GoogleService-Info.plist */,
 				FAA8A04C21063F14008F0491 /* Info.plist */,
 			);
 			path = Supporting;
@@ -183,6 +189,8 @@
 		FAA8A0572106417B008F0491 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				FAD035722112811000A72243 /* IdentifiedMapView.swift */,
+				FAD03574211283A600A72243 /* IdentifiedLocationManager.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -203,7 +211,8 @@
 				FAE5C18F210F9E6D007BAE81 /* SetTime+asDict.swift */,
 				FAD035682111165600A72243 /* SetTime+setNotification.swift */,
 				FAD0356C21124D1500A72243 /* TimeFromLocation+asDict.swift */,
-				FAD0356E21124D5C00A72243 /* TimFromLocation+setNotification.swift */,
+				FAD0356E21124D5C00A72243 /* TimeFromLocation+setNotification.swift */,
+				FAD0357021127BAD00A72243 /* TimeFromLocation+updatingAlarms.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -277,9 +286,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FA7847E8210BB84600A7D0CF /* GoogleService-Info.plist in Resources */,
 				FAA8A04B21063F14008F0491 /* LaunchScreen.storyboard in Resources */,
-				FAE5C18C210F8827007BAE81 /* SetTimeDisplay.storyboard in Resources */,
+				FAE5C18C210F8827007BAE81 /* DisplayAlarm.storyboard in Resources */,
+				FAD0357D2114FC9500A72243 /* GoogleService-Info.plist in Resources */,
 				FAA8A04821063F14008F0491 /* Assets.xcassets in Resources */,
 				FAA8A04621063F13008F0491 /* Main.storyboard in Resources */,
 			);
@@ -296,20 +305,12 @@
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-Punctual/Pods-Punctual-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
-				"${BUILT_PRODUCTS_DIR}/GoogleToolboxForMac/GoogleToolboxForMac.framework",
-				"${BUILT_PRODUCTS_DIR}/Protobuf/Protobuf.framework",
 				"${BUILT_PRODUCTS_DIR}/SwiftyJSON/SwiftyJSON.framework",
-				"${BUILT_PRODUCTS_DIR}/leveldb-library/leveldb.framework",
-				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleToolboxForMac.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Protobuf.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftyJSON.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/leveldb.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -365,6 +366,7 @@
 				FAFCED672106705A00A7204F /* TimeFromLocationCell.swift in Sources */,
 				FAD035692111165600A72243 /* SetTime+setNotification.swift in Sources */,
 				FAD0356D21124D1500A72243 /* TimeFromLocation+asDict.swift in Sources */,
+				FAD03575211283A600A72243 /* IdentifiedLocationManager.swift in Sources */,
 				FAE4EC702109197300A0CC1D /* GMSTestViewController.swift in Sources */,
 				FAA8A05E2106457A008F0491 /* GoogleMapsService.swift in Sources */,
 				FAFCED772107A52500A7204F /* EditSetTimeAlarmViewController.swift in Sources */,
@@ -373,12 +375,14 @@
 				FAA8A05C210644E2008F0491 /* CoreDataHelper.swift in Sources */,
 				FAD0356B21122BA600A72243 /* EditTimeFromLocationAlarmViewController.swift in Sources */,
 				FAA8A04121063F13008F0491 /* AppDelegate.swift in Sources */,
+				FAD035732112811000A72243 /* IdentifiedMapView.swift in Sources */,
 				FAE5C190210F9E6D007BAE81 /* SetTime+asDict.swift in Sources */,
-				FAD0356F21124D5C00A72243 /* TimFromLocation+setNotification.swift in Sources */,
+				FAD0356F21124D5C00A72243 /* TimeFromLocation+setNotification.swift in Sources */,
 				FAFCED70210687C600A7204F /* Punctual.xcdatamodeld in Sources */,
 				FAE4EC72210924D400A0CC1D /* UIViewController+keyboardControl.swift in Sources */,
-				FAE5C18E210F9859007BAE81 /* DisplaySetTimeAlarmViewController.swift in Sources */,
+				FAE5C18E210F9859007BAE81 /* DisplayAlarmViewController.swift in Sources */,
 				FAFCED752106E23500A7204F /* SetTimeCell.swift in Sources */,
+				FAD0357121127BAD00A72243 /* TimeFromLocation+updatingAlarms.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

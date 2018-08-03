@@ -24,20 +24,38 @@ struct GoogleMapsService {
         }
     }
     
-    static func getRoute(from origin: (latitude: CLLocationDegrees, longitude: CLLocationDegrees), to destination: (latitude: CLLocationDegrees, longitude: CLLocationDegrees), withTransport travelType: String, leavingAt date: TimeInterval = Date().timeIntervalSince1970, completion: @escaping (JSON?) -> Void) {
-        let request = "https://maps.googleapis.com/maps/api/directions/json?origin=\(origin.latitude),\(origin.longitude)&destination=\(destination.latitude),\(destination.longitude)&mode=\(travelType)&departure_time=\(date)&key=AIzaSyDrBVdxezWqWJJLDbFZZpDHAjwc-kLMGqA"
+    static func getRoute(from origin: (latitude: CLLocationDegrees, longitude: CLLocationDegrees), to destination: (latitude: CLLocationDegrees, longitude: CLLocationDegrees), withTransport travelType: String, leavingAt date: TimeInterval? = nil, completion: @escaping (JSON?) -> Void) {
+        var dateForRequest = ""
+        if let date = date {
+            dateForRequest = String(Int(date))
+        } else {
+            dateForRequest = "now"
+        }
+        let request = "https://maps.googleapis.com/maps/api/directions/json?origin=\(origin.latitude),\(origin.longitude)&destination=\(destination.latitude),\(destination.longitude)&mode=\(travelType)&departure_time=\(dateForRequest)&key=AIzaSyDrBVdxezWqWJJLDbFZZpDHAjwc-kLMGqA"
         Alamofire.request(request).response { response in
             if let responseData = response.data {
                 let data = Data(responseData)
-                guard let json = try? JSON(data: data) else { return }
+                guard let json = try? JSON(data: data) else {
+                    print("Could not create JSON")
+                    print("request:", request)
+                    completion(nil)
+                    return
+                }
                 let routes = json["routes"].arrayValue
                 if routes.count > 0 {
-                    return completion(routes[0])
+                    completion(routes[0])
+                    return
                 } else {
-                    return completion(nil)
+                    print("Google Maps found 0 routes: \(routes)")
+                    print("request:", request)
+                    completion(nil)
+                    return
                 }
             }
-            return completion(nil)
+            print("No response data")
+            print("request:", request)
+            completion(nil)
+            return
         }
     }
 }

@@ -8,10 +8,12 @@
 
 import UIKit
 import GoogleMaps
+import UserNotifications
 
 class ListAlarmsViewController: UIViewController {
     @IBOutlet weak var alarmTableView: UITableView!
     
+    let center = UNUserNotificationCenter.current()
     private let locationManager = CLLocationManager()
     var alarms = [Alarm]()
     
@@ -43,8 +45,18 @@ class ListAlarmsViewController: UIViewController {
             }
             let destination = segue.destination as! EditSetTimeAlarmViewController
             destination.alarm = alarm
+        case "EditTimeFromLocationAlarm":
+            guard let indexPath = alarmTableView.indexPathForSelectedRow else { return }
+            guard let alarm = alarms[indexPath.row] as? TimeFromLocation else {
+                print("Unexpected alarm type in TimeFromLocation cell")
+                return
+            }
+            let destination = segue.destination as! EditTimeFromLocationAlarmViewController
+            destination.alarm = alarm
         default:
-            print("Unexpected segue with identifier: \(identifier)")
+            if identifier != "NewAlarm" {
+                assertionFailure("Unexpected segue with identifier: \(identifier)")
+            }
         }
     }
     
@@ -66,6 +78,11 @@ extension ListAlarmsViewController: UITableViewDataSource {
             cell.alarm = alarm as? SetTime
             cell.configure()
             return cell
+        case "TimeFromLocation":
+            let cell = tableView.dequeueReusableCell(withIdentifier: "TimeFromLocationCell") as! TimeFromLocationCell
+            cell.alarm = alarm as? TimeFromLocation
+            cell.configure()
+            return cell
         default:
             assertionFailure("Unexpected alarm type: \(type(of: alarm))")
             let cell = tableView.dequeueReusableCell(withIdentifier: "SetTimeCell") as! SetTimeCell
@@ -75,8 +92,10 @@ extension ListAlarmsViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            CoreDataHelper.delete(alarm: alarms[indexPath.row]) {
+            let alarm = alarms[indexPath.row]
+            CoreDataHelper.delete(alarm: alarm) {
                 self.alarms = CoreDataHelper.retrieveAlarms()
+                self.center.removeDeliveredNotifications(withIdentifiers: alarm.getIdentifiers())
                 tableView.reloadData()
             }
         }

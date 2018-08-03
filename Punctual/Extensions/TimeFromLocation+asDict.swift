@@ -16,8 +16,11 @@ extension TimeFromLocation {
             "useLocation": useLocation,
             "longitude": longitude,
             "latitude": latitude,
+            "originLongitude": originLongitude,
+            "originLatitude": originLatitude,
             "eventTime": eventTime ?? Date(),
-            "margin": margin ?? Date(),
+            "margin": margin,
+            "daily": daily,
             "transportation": transportation ?? "walk",
             "reps": notificationRepeats,
             "id": id

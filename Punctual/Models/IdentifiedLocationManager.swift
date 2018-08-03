@@ -7,3 +7,9 @@
 //
 
 import Foundation
+import GoogleMaps
+import GooglePlaces
+
+class IdentifiedLocationManager: CLLocationManager {
+    weak var mapView: GMSMapView!
+}

@@ -7,3 +7,10 @@
 //
 
 import Foundation
+import GoogleMaps
+import GooglePlaces
+
+class IdentifiedMapView: GMSMapView {
+    var name: String!
+    weak var marker: GMSMarker?
+}

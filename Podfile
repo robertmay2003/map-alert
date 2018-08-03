@@ -8,10 +8,9 @@ target 'Punctual' do
   # Pods for Punctual
   pod 'GoogleMaps'
   pod 'GooglePlaces'
-  pod 'Firebase/Core'
-  pod 'Firebase/Messaging'
-  pod 'Firebase/Database'
   pod 'Alamofire', '~> 4.7'
   pod 'SwiftyJSON', '~> 4.1'
+  pod 'Firebase/Core'
+  pod 'Firebase/Messaging'
 
 end

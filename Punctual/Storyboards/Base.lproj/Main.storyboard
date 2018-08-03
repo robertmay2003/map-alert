@@ -85,6 +85,9 @@
                                                                     <constraints>
                                                                         <constraint firstAttribute="width" constant="49" id="W9r-fv-dXI"/>
                                                                     </constraints>
+                                                                    <connections>
+                                                                        <action selector="activitySwitchChanged:" destination="iFk-9V-UXe" eventType="valueChanged" id="WLH-bs-Xkd"/>
+                                                                    </connections>
                                                                 </switch>
                                                             </subviews>
                                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -116,10 +119,11 @@
                                         <connections>
                                             <outlet property="activeStatusLabel" destination="noE-A2-k6p" id="GQP-xC-bC9"/>
                                             <outlet property="activeSwitch" destination="piO-HO-iSx" id="Kap-6c-1Gl"/>
+                                            <outlet property="addressLabel" destination="tyw-BL-fuX" id="k3I-8d-zrx"/>
                                             <outlet property="mapView" destination="wfv-5y-ybe" id="cvT-ia-gxU"/>
                                             <outlet property="timeLabel" destination="9V1-1d-6vx" id="vQ8-fW-IU0"/>
                                             <outlet property="titleLabel" destination="ja7-SB-sHt" id="a4O-2j-jfN"/>
-                                            <segue destination="CQa-Bj-awF" kind="show" id="OcF-17-EfZ"/>
+                                            <segue destination="CQa-Bj-awF" kind="show" identifier="EditTimeFromLocationAlarm" id="OcF-17-EfZ"/>
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="SetTimeCell" rowHeight="100" id="jA4-0I-vJm" customClass="SetTimeCell" customModule="Punctual" customModuleProvider="target">
@@ -184,7 +188,7 @@
                                                                         <constraint firstAttribute="width" constant="49" id="kjC-OF-RNX"/>
                                                                     </constraints>
                                                                     <connections>
-                                                                        <action selector="activitySwitchChanged:" destination="jA4-0I-vJm" eventType="valueChanged" id="WEx-p0-Et9"/>
+                                                                        <action selector="activitySwitchChanged:" destination="jA4-0I-vJm" eventType="valueChanged" id="Rfs-7y-vMh"/>
                                                                     </connections>
                                                                 </switch>
                                                             </subviews>
@@ -216,7 +220,7 @@
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="activeStatusLabel" destination="cjk-l5-e3y" id="PkG-PV-ucE"/>
-                                            <outlet property="activeSwitch" destination="AeG-Ze-idG" id="7wp-ut-dZw"/>
+                                            <outlet property="activeSwitch" destination="AeG-Ze-idG" id="rEh-5P-g3Z"/>
                                             <outlet property="addressLabel" destination="Ees-7t-m9L" id="QHm-bG-gCG"/>
                                             <outlet property="mapView" destination="vQ4-wR-8XH" id="9Rx-ff-mnH"/>
                                             <outlet property="timeLabel" destination="Th1-Cf-NF5" id="SAo-rk-mUj"/>
@@ -243,7 +247,7 @@
                     <navigationItem key="navigationItem" title="My Alarms" id="Pkd-Vd-1zB">
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="Lp8-Wz-ExW">
                             <connections>
-                                <segue destination="z25-7K-IZq" kind="show" id="il2-Pk-9yw"/>
+                                <segue destination="z25-7K-IZq" kind="show" identifier="NewAlarm" id="il2-Pk-9yw"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -413,6 +417,9 @@
                                             </textField>
                                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="v8J-NW-ddr">
                                                 <rect key="frame" x="302" y="41" width="51" height="31"/>
+                                                <connections>
+                                                    <action selector="switchPressed:" destination="CQa-Bj-awF" eventType="valueChanged" id="HAr-Qd-p0p"/>
+                                                </connections>
                                             </switch>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Active" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2nm-mO-Qk7">
                                                 <rect key="frame" x="303.5" y="10" width="47.5" height="21"/>
@@ -433,7 +440,7 @@
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="MHc-sx-wmQ" customClass="GMSMapView">
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="MHc-sx-wmQ" customClass="IdentifiedMapView" customModule="Punctual" customModuleProvider="target">
                                                 <rect key="frame" x="10" y="127" width="355" height="140"/>
                                                 <color key="backgroundColor" name="keyboardFocusIndicatorColor" catalog="System" colorSpace="catalog"/>
                                                 <constraints>
@@ -459,7 +466,7 @@
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="r2Z-C6-LlH" customClass="GMSMapView">
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="r2Z-C6-LlH" customClass="IdentifiedMapView" customModule="Punctual" customModuleProvider="target">
                                                 <rect key="frame" x="10" y="357" width="355" height="140"/>
                                                 <color key="backgroundColor" name="keyboardFocusIndicatorColor" catalog="System" colorSpace="catalog"/>
                                                 <constraints>
@@ -721,8 +728,16 @@
                         <viewLayoutGuide key="safeArea" id="D1y-Qs-hUb"/>
                     </view>
                     <navigationItem key="navigationItem" title="New Time From Place Alarm" id="PtT-px-HU3">
-                        <barButtonItem key="leftBarButtonItem" title="Cancel" id="Y03-ms-OM0"/>
-                        <barButtonItem key="rightBarButtonItem" title="Save" id="icS-uq-gQ6"/>
+                        <barButtonItem key="leftBarButtonItem" title="Cancel" id="Y03-ms-OM0">
+                            <connections>
+                                <segue destination="iVa-Qu-Dmv" kind="unwind" identifier="cancel" unwindAction="unwindWithSegue:" id="AhH-Vd-Yl7"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" title="Save" id="icS-uq-gQ6">
+                            <connections>
+                                <segue destination="iVa-Qu-Dmv" kind="unwind" identifier="save" unwindAction="unwindWithSegue:" id="qbA-jf-eaq"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <size key="freeformSize" width="375" height="1241"/>
                     <connections>
@@ -743,6 +758,7 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="XEp-5Q-w3N" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="iVa-Qu-Dmv" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="2749.5999999999999" y="470.91454272863569"/>
         </scene>
@@ -1088,7 +1104,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="dmq-mj-bcj"/>
-        <segue reference="OcF-17-EfZ"/>
+        <segue reference="kEA-8y-MQV"/>
+        <segue reference="IYk-cE-uVU"/>
     </inferredMetricsTieBreakers>
 </document>

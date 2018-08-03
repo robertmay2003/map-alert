@@ -10,73 +10,76 @@ import UIKit
 import CoreData
 import GoogleMaps
 import GooglePlaces
-import Firebase
-import FirebaseDatabase
-import FirebaseInstanceID
-import FirebaseMessaging
 import UserNotifications
 import AudioToolbox
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate, MessagingDelegate{
+class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate, CLLocationManagerDelegate {
 
     var window: UIWindow?
     var ringingAlarm: Alarm?
-    
+    let locationManager = CLLocationManager()
+    weak var timer: Timer?
+    fileprivate var fetchRequest: URLRequest? {
+        // create this however appropriate for your app
+        guard let url = URL(string: "https://www.google.com/") else { return nil }
+        let request: URLRequest = URLRequest(url: url)
+        return request
+    }
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         GMSServices.provideAPIKey("AIzaSyDrBVdxezWqWJJLDbFZZpDHAjwc-kLMGqA")
         GMSPlacesClient.provideAPIKey("AIzaSyDrBVdxezWqWJJLDbFZZpDHAjwc-kLMGqA")
-
         
-        if #available(iOS 10.0, *) {
-            // For iOS 10 display notification (sent via APNS)
-            UNUserNotificationCenter.current().delegate = self
-            let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
-            UNUserNotificationCenter.current().requestAuthorization(
-                options: authOptions,
-                completionHandler: {_, _ in })
-            // For iOS 10 data message (sent via FCM
-            Messaging.messaging().delegate = self
-            UNUserNotificationCenter.current().delegate = self
-        } else {
-            let settings: UIUserNotificationSettings =
-                UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil)
-            application.registerUserNotificationSettings(settings)
-        }
-        
-        application.registerForRemoteNotifications()
-        
-        FirebaseApp.configure()
-        
-        InstanceID.instanceID().instanceID { (result, error) in
-            if let error = error {
-                print("Error fetching remote instange ID: \(error)")
-            } else if let result = result {
-                print("Remote instance ID token: \(result.token)")
+        let center = UNUserNotificationCenter.current()
+        center.delegate = self
+        let options: UNAuthorizationOptions = [.alert, .sound];
+        center.requestAuthorization(options: options) {
+            (granted, error) in
+            if !granted {
+                print("Something went wrong")
             }
         }
         
+        // Update TimeFromLocation alarms in background once every 5 minutes
+        UIApplication.shared.setMinimumBackgroundFetchInterval(300)
+        
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.requestAlwaysAuthorization()
+        locationManager.startUpdatingLocation()
+
         return true
     }
 
     func applicationWillResignActive(_ application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
         // Use this method to pause ongoing tasks, disable timers, and invalidate graphics rendering callbacks. Games should use this method to pause the game.
+        timer?.invalidate()
     }
 
     func applicationDidEnterBackground(_ application: UIApplication) {
         // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
         // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+        timer?.invalidate()
     }
 
     func applicationWillEnterForeground(_ application: UIApplication) {
         // Called as part of the transition from the background to the active state; here you can undo many of the changes made on entering the background.
+        // Update TimeFromLocation alarms every 1 minute while Punctual is running
+        TimeFromLocation.checkAlarms(locationManager.location?.coordinate)
+        timer?.invalidate()
+        timer = Timer.scheduledTimer(withTimeInterval: 30.0, repeats: true) { [weak self] _ in
+            if let appDelegate = self {
+                TimeFromLocation.checkAlarms(appDelegate.locationManager.location?.coordinate)
+            }
+        }
+        
         ringingAlarm = getMostRecentAlarm()
         if let current = ringingAlarm {
             if let setTime = current as? SetTime {
-                showSetTime(alarm: setTime.asDict())
+                showAlarm(alarm: setTime.asDict())
             } else {
                 // No implementaion here yet
             }
@@ -89,6 +92,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
 
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+        timer?.invalidate()
     }
 
     // MARK: - Core Data stack
@@ -135,27 +139,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
             }
         }
     }
-    
-    func applicationReceivedRemoteMessage(_ remoteMessage: MessagingRemoteMessage) {
-        print(remoteMessage.appData)
-    }
 
-    func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String) {
-        print("Firebase registration token: \(fcmToken)")
-        let emptyUser = [fcmToken: ["initiated": true]]
-        Database.database().reference().updateChildValues(emptyUser)
-        
-        let dataDict:[String: Any] = [
-            "token": fcmToken,
-            "currentAlarms": []
-        ]
-        NotificationCenter.default.post(name: Notification.Name("FCMToken"), object: nil, userInfo: dataDict)
-        // TODO: If necessary send token to application server.
-        // Note: This callback is fired at each app startup and whenever a new token is generated.
-    }
-    
+
     // When a notification is recieved while app is open
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        print("Notification recieved")
         //Handle the notification
         //This will get the text sent in your notification
         
@@ -167,19 +155,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         AudioServicesPlayAlertSoundWithCompletion(SystemSoundID(kSystemSoundID_Vibrate), nil)
         
         if let alarm = notification.request.content.userInfo["alarm"] as? [String: Any] {
-            showSetTime(alarm: alarm)
+            showAlarm(alarm: alarm)
         }
     }
     
     // When a notification is tapped
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
         //Handle the notification
-        print("did receive")
-        let body = response.notification.request.content.body
         if let alarm = response.notification.request.content.userInfo["alarm"] as? [String: Any] {
             if let type = alarm["type"] as? String {
                 if type == "ST" {
-                    showSetTime(alarm: alarm)
+                    showAlarm(alarm: alarm)
                 } else {
                     // no implementation yet
                 }
@@ -188,7 +174,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         completionHandler()
         
     }
-
+    
+    func application(_ application: UIApplication,
+                     performFetchWithCompletionHandler completionHandler:
+        @escaping (UIBackgroundFetchResult) -> Void) {
+        if let fetchRequest = fetchRequest {
+            URLSession.shared.dataTask(with: fetchRequest) { data, response, error in }
+        }
+        
+        // Check TFL Alarms
+        TimeFromLocation.checkAlarms(locationManager.location?.coordinate)
+    }
     
     func getMostRecentAlarm() -> Alarm? {
         let formatter = DateFormatter()
@@ -198,7 +194,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         if alarms.count > 0 {
             var mostRecent = alarms[0]
             for alarm in alarms[1..<alarms.count] {
-                print("comparing alarm \(alarm.title) to alarm \(mostRecent.title!)")
                 if let alarmEvent = alarm.eventTime,
                     let recentEvent = mostRecent.eventTime {
                     if alarmEvent > recentEvent && alarmEvent < Date() {
@@ -230,10 +225,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         }
     }
     
-    private func showSetTime(alarm: [String: Any]) {
-        print("peanut butter jelly time")
-        let storyboard = UIStoryboard(name: "SetTimeDisplay", bundle: .main)
-        if let initialViewController = storyboard.instantiateInitialViewController() as? DisplaySetTimeAlarmViewController {
+    private func showAlarm(alarm: [String: Any]) {
+        let storyboard = UIStoryboard(name: "DisplayAlarm", bundle: .main)
+        if let initialViewController = storyboard.instantiateInitialViewController() as? DisplayAlarmViewController {
             initialViewController.alarm = alarm
             initialViewController.delegate = self
             window?.rootViewController = initialViewController
@@ -242,12 +236,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     }
 }
 
-extension AppDelegate: DisplaySetTimeAlarmViewControllerDelegate {
+extension AppDelegate: DisplayAlarmViewControllerDelegate {
     
     func toMainScreen() {
         let storyboard = UIStoryboard(name: "Main", bundle: .main)
         if let initialViewController = storyboard.instantiateInitialViewController() as? UINavigationController {
-            print("leaving alarm view")
             window?.rootViewController = initialViewController
             window?.makeKeyAndVisible()
         }

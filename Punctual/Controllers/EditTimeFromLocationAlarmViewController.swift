@@ -17,11 +17,11 @@ class EditTimeFromLocationAlarmViewController: UIViewController {
     @IBOutlet weak var activeSwitch: UISwitch!
     @IBOutlet weak var activeStatusLabel: UILabel!
     
-    @IBOutlet weak var startingLocationMapView: GMSMapView!
+    @IBOutlet weak var startingLocationMapView: IdentifiedMapView!
     @IBOutlet weak var startingAddressTextField: UITextField!
     @IBOutlet weak var useMyLocationSwitch: UISwitch!
     
-    @IBOutlet weak var destinationMapView: GMSMapView!
+    @IBOutlet weak var destinationMapView: IdentifiedMapView!
     @IBOutlet weak var destinationTextField: UITextField!
     
     @IBOutlet weak var arrivalTimeDatePicker: UIDatePicker!
@@ -33,8 +33,8 @@ class EditTimeFromLocationAlarmViewController: UIViewController {
     @IBOutlet weak var repetitionsTextField: UITextField!
     @IBOutlet weak var customMessageTextField: UITextView!
     
-    let startingLocationManager = CLLocationManager()
-    let destinationManager = CLLocationManager()
+    let startingLocationManager = IdentifiedLocationManager()
+    let destinationManager = IdentifiedLocationManager()
     var originMarker = GMSMarker()
     var destinationMarker = GMSMarker()
     var alarm: TimeFromLocation?
@@ -62,8 +62,17 @@ class EditTimeFromLocationAlarmViewController: UIViewController {
         startingLocationMapView.delegate = self
         destinationMapView.delegate = self
         
+        startingLocationMapView.marker = originMarker
+        destinationMapView.marker = destinationMarker
+        
         originMarker.map = self.startingLocationMapView
         destinationMarker.map = self.destinationMapView
+        
+        destinationMapView.name = "destination"
+        startingLocationMapView.name = "origin"
+        
+        destinationManager.mapView = destinationMapView
+        startingLocationManager.mapView = startingLocationMapView
         
         // Set up alarm if editing
         if let alarm = alarm {
@@ -72,23 +81,28 @@ class EditTimeFromLocationAlarmViewController: UIViewController {
             repetitionsTextField.text = String(alarm.notificationRepeats)
             activeStatusLabel.text = alarm.active ? "Active" : "Inactive"
             
-            if let eventTime = alarm.eventTime,
-                let alarmTime = alarm.margin {
-                marginDatePicker.date = alarmTime
+            if let eventTime = alarm.eventTime {
+                marginDatePicker.countDownDuration = alarm.margin
                 arrivalTimeDatePicker.date = eventTime
             }
             
             activeSwitch.isOn = alarm.active
             dailySwitch.isOn = alarm.daily
+            useMyLocationSwitch.isOn = alarm.useLocation
             
             if let index = ["driving", "bicycling", "walking"].index(of: alarm.transportation) {
                 transportSegmentedControl.selectedSegmentIndex = Int(index)
             }
             
-            let coordinate = CLLocationCoordinate2D(latitude: alarm.latitude, longitude: alarm.longitude)
+            let coordinate = CLLocationCoordinate2D(latitude: alarm.originLatitude, longitude: alarm.originLongitude)
             
-            reverseGeocodeCoordinate(coordinate)
+            reverseGeocodeCoordinate(coordinate, marker: originMarker, textField: startingAddressTextField)
             startingLocationMapView.camera = GMSCameraPosition(target: coordinate, zoom: 15, bearing: 0, viewingAngle: 0)
+            
+            let destinationCoordinate = CLLocationCoordinate2D(latitude: alarm.latitude, longitude: alarm.longitude)
+            
+            reverseGeocodeCoordinate(destinationCoordinate, marker: destinationMarker, textField: destinationTextField)
+            destinationMapView.camera = GMSCameraPosition(target: destinationCoordinate, zoom: 15, bearing: 0, viewingAngle: 0)
         }
         
         // Set keyboard hiding
@@ -117,6 +131,7 @@ class EditTimeFromLocationAlarmViewController: UIViewController {
         }
         let active = activeSwitch.isOn
         let daily = dailySwitch.isOn
+        let useMyLocation = useMyLocationSwitch.isOn
         var repetitions = ""
         if let reps2 = repetitionsTextField.text {
             let spaceCount = reps2.components(separatedBy: " ").count - 1
@@ -147,9 +162,11 @@ class EditTimeFromLocationAlarmViewController: UIViewController {
             }
         }
         let arrivalTime = arrivalTimeDatePicker.date
-        let margin = marginDatePicker.date
-        let long = originMarker.position.longitude
-        let lat = originMarker.position.latitude
+        let margin = marginDatePicker.countDownDuration
+        let long = destinationMarker.position.longitude
+        let lat = destinationMarker.position.latitude
+        let originLat = originMarker.position.latitude
+        let originLong = originMarker.position.longitude
         if alarm == nil {
             alarm = CoreDataHelper.newTFLAlarm()
             if let alarm = alarm {
@@ -167,11 +184,12 @@ class EditTimeFromLocationAlarmViewController: UIViewController {
             alarm.notificationMessage = message
             alarm.latitude = lat
             alarm.longitude = long
+            alarm.useLocation = useMyLocation
+            alarm.originLongitude = originLong
+            alarm.originLatitude = originLat
+            alarm.updating = alarm.active
             
             CoreDataHelper.saveAlarms()
-            
-            // Set up notification
-            alarm.setNotification()
         }
         return true
     }
@@ -192,26 +210,27 @@ class EditTimeFromLocationAlarmViewController: UIViewController {
         }
     }
     
-    private func reverseGeocodeCoordinate(_ coordinate: CLLocationCoordinate2D) {
+    private func reverseGeocodeCoordinate(_ coordinate: CLLocationCoordinate2D, marker: GMSMarker, textField: UITextField) {
         GoogleMapsService.getAddress(at: coordinate) { (address) in
-            self.startingAddressTextField.text = address
+            textField.text = address
         }
         
-        self.originMarker.position = CLLocationCoordinate2D(latitude: coordinate.latitude, longitude: coordinate.longitude)
+        marker.position = CLLocationCoordinate2D(latitude: coordinate.latitude, longitude: coordinate.longitude)
     }
 }
 
 extension EditTimeFromLocationAlarmViewController: CLLocationManagerDelegate {
     
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        guard let manager = manager as? IdentifiedLocationManager else { return }
         guard status == .authorizedWhenInUse else {
             return
         }
         if alarm == nil {
-            startingLocationMapView.isMyLocationEnabled = true
-            startingLocationMapView.settings.myLocationButton = true
+            manager.mapView.isMyLocationEnabled = true
+            manager.mapView.settings.myLocationButton = true
             
-            locationManager.startUpdatingLocation()
+            manager.startUpdatingLocation()
         }
     }
     
@@ -220,14 +239,19 @@ extension EditTimeFromLocationAlarmViewController: CLLocationManagerDelegate {
             return
         }
         
-        startingLocationMapView.camera = GMSCameraPosition(target: location.coordinate, zoom: 15, bearing: 0, viewingAngle: 0)
+        guard let manager = manager as? IdentifiedLocationManager else { return }
         
-        locationManager.stopUpdatingLocation()
+        manager.mapView.camera = GMSCameraPosition(target: location.coordinate, zoom: 15, bearing: 0, viewingAngle: 0)
+        
+        manager.stopUpdatingLocation()
     }
 }
 
 extension EditTimeFromLocationAlarmViewController: GMSMapViewDelegate {
     func mapView(_ mapView: GMSMapView, idleAt position: GMSCameraPosition) {
-        reverseGeocodeCoordinate(position.target)
+        guard let mapView = mapView as? IdentifiedMapView else { return }
+        if let marker = mapView.marker {
+            reverseGeocodeCoordinate(position.target, marker: marker, textField: mapView.name == "destination" ? destinationTextField : startingAddressTextField)
+        }
     }
 }

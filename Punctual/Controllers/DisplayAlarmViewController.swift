@@ -1,5 +1,5 @@
 //
-//  DisplaySetTimeAlarmViewController.swift
+//  DisplayAlarmViewController.swift
 //  Punctual
 //
 //  Created by Robert May on 7/30/18.
@@ -27,8 +27,11 @@ class DisplayAlarmViewController: UIViewController, CLLocationManagerDelegate {
     var alarm: [String: Any]!
     let locationManager = CLLocationManager()
     let center = UNUserNotificationCenter.current()
+    var origin: CLLocationCoordinate2D!
     weak var timer: Timer?
-    weak var delegate: DisplaySetTimeAlarmViewControllerDelegate?
+    weak var delegate: DisplayAlarmViewControllerDelegate?
+    var type: String!
+    var googleMapsURL: NSURL?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -46,6 +49,19 @@ class DisplayAlarmViewController: UIViewController, CLLocationManagerDelegate {
         }
         if let id = alarm["id"] as? Int64 {
             center.removePendingNotificationRequests(withIdentifiers: Alarm.getIdentifiers(for: id))
+            if let daily = alarm["daily"] as? Bool {
+                if daily {
+                    if let alarm = CoreDataHelper.retrieveAlarm(with: id) as? TimeFromLocation {
+                        alarm.updating = false
+                        CoreDataHelper.saveAlarms()
+                    }
+                }
+            }
+        }
+        if let tempType = alarm["type"] as? String {
+            type = tempType
+        } else {
+            return
         }
         configure()
     }
@@ -62,7 +78,6 @@ class DisplayAlarmViewController: UIViewController, CLLocationManagerDelegate {
         if let event = alarm["eventTime"] as? Date {
             arrivalTimeLabel.text = formatter.string(from: event)
         }
-        
         if let latitude = alarm["latitude"] as? CLLocationDegrees,
             let longitude = alarm["longitude"] as? CLLocationDegrees {
             let camera = GMSCameraPosition.camera(withLatitude: latitude, longitude: longitude, zoom: 15)
@@ -76,13 +91,29 @@ class DisplayAlarmViewController: UIViewController, CLLocationManagerDelegate {
             }
             marker.map = mapView
         }
+        if type == "ST" {
+            origin = locationManager.location?.coordinate
+        } else {
+            // Set origin to originLat and Long
+            if let originLat = alarm["originLatitude"] as? CLLocationDegrees,
+                let originLong = alarm["originLongitude"] as? CLLocationDegrees {
+                origin = CLLocationCoordinate2D(latitude: originLat, longitude: originLong)
+            }
+            // Reset origin to current position if useLocation
+            if let useLocation = alarm["useLocation"] as? Bool {
+                if useLocation {
+                    origin = locationManager.location?.coordinate
+                }
+            }
+        }
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        guard let origin: CLLocationCoordinate2D = manager.location?.coordinate else { return }
+        guard let origin = origin else { return }
         if let latitude = alarm["latitude"] as? CLLocationDegrees,
             let longitude = alarm["longitude"] as? CLLocationDegrees,
             let transportation = alarm["transportation"] as? String {
+            googleMapsURL = NSURL(string: "https://www.google.com/maps/dir/\(origin.latitude),\(origin.longitude)/\(latitude),\(longitude)")
             GoogleMapsService.getRoute(from: (origin.latitude, origin.longitude), to: (latitude, longitude), withTransport: transportation) { route in
                 guard let route = route else {
                     print("No route found")
@@ -150,24 +181,51 @@ class DisplayAlarmViewController: UIViewController, CLLocationManagerDelegate {
         CoreDataHelper.alarmWasShown(with: id)
     }
     
-    @IBAction func snoozePressed(_ sender: UIButton) {
-        guard let id = alarm["id"] as? Int64 else {
-            print("Invalid alarm with id: \(alarm["id"] ?? "nil")")
-            return
+    @IBAction func callSnoozePressed(_ sender: UIButton) {
+        snoozePressed()
+    }
+    
+    func snoozePressed() {
+        if type == "ST" {
+            guard let id = alarm["id"] as? Int64 else {
+                print("Invalid alarm with id: \(alarm["id"] ?? "nil")")
+                return
+            }
+            if let alarm = CoreDataHelper.retrieveAlarm(with: id) as? SetTime {
+                // add 5 minutes to alarm time
+                alarm.alarmTime = Date().addingTimeInterval(300.0)
+                alarm.setNotification()
+                alarm.alarmTime = Date().addingTimeInterval(-300.0)
+                CoreDataHelper.alarmWasShown(with: id)
+            }
+            CoreDataHelper.saveAlarms()
+            stopTimer()
+            delegate?.toMainScreen()
+        } else {
+            guard let id = alarm["id"] as? Int64 else {
+                print("Invalid alarm with id: \(alarm["id"] ?? "nil")")
+                return
+            }
+            if let alarm = CoreDataHelper.retrieveAlarm(with: id) as? TimeFromLocation {
+                // add 5 minutes to arrival time
+                alarm.eventTime = Date().addingTimeInterval(300.0)
+                alarm.dateShown = nil
+                alarm.updating = alarm.active
+                alarm.eventTime = Date().addingTimeInterval(-300.0)
+                CoreDataHelper.alarmWasShown(with: id)
+            }
+            CoreDataHelper.saveAlarms()
+            stopTimer()
+            delegate?.toMainScreen()
         }
-        if let alarm = CoreDataHelper.retrieveAlarm(with: id) as? SetTime {
-            // alarm.alarmTime = Date().addingTimeInterval(5.0 * 60.0)
-            alarm.alarmTime = Date().addingTimeInterval(60.0)
-            alarm.setNotification()
-            alarm.alarmTime = Date().addingTimeInterval(-60.0)
-            CoreDataHelper.alarmWasShown(with: id)
+    }
+    @IBAction func toGoogleMaps(_ sender: UIButton) {
+        if let url = googleMapsURL {
+            UIApplication.shared.open(url as URL)
         }
-        CoreDataHelper.saveAlarms()
-        stopTimer()
-        delegate?.toMainScreen()
     }
 }
 
-protocol DisplaySetTimeAlarmViewControllerDelegate: class {
+protocol DisplayAlarmViewControllerDelegate: class {
     func toMainScreen() -> Void
 }

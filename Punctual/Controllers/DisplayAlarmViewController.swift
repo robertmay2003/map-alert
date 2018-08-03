@@ -13,7 +13,7 @@ import GooglePlaces
 import SwiftyJSON
 import UserNotifications
 
-class DisplaySetTimeAlarmViewController: UIViewController, CLLocationManagerDelegate {
+class DisplayAlarmViewController: UIViewController, CLLocationManagerDelegate {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var arrivalTimeLabel: UILabel!
     @IBOutlet weak var preparationTimeLabel: UILabel!
@@ -84,7 +84,10 @@ class DisplaySetTimeAlarmViewController: UIViewController, CLLocationManagerDele
             let longitude = alarm["longitude"] as? CLLocationDegrees,
             let transportation = alarm["transportation"] as? String {
             GoogleMapsService.getRoute(from: (origin.latitude, origin.longitude), to: (latitude, longitude), withTransport: transportation) { route in
-                guard let route = route else { return }
+                guard let route = route else {
+                    print("No route found")
+                    return
+                }
                 let routeOverviewPolyline = route["overview_polyline"].dictionary
                 let points = routeOverviewPolyline?["points"]?.stringValue
                 let path = GMSPath.init(fromEncodedPath: points!)

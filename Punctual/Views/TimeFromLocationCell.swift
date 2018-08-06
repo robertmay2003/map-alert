@@ -10,6 +10,7 @@ import UIKit
 import GoogleMaps
 
 class TimeFromLocationCell: UITableViewCell {
+    @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var timeLabel: UILabel!
     @IBOutlet weak var mapView: GMSMapView!
@@ -21,12 +22,21 @@ class TimeFromLocationCell: UITableViewCell {
     var alarm: TimeFromLocation?
     
     func configure() {
+        // Set up layers
+        containerView.layer.cornerRadius = 4
+        mapView.layer.cornerRadius = 4
+        
+        // Set up labels
         guard let alarm = alarm else { return }
         titleLabel.text = alarm.title
         let formatter = DateFormatter()
         formatter.dateFormat = "MMM-dd HH:mm"
-        timeLabel.text = "Arrival: " + formatter.string(from: alarm.eventTime!)
-        activeStatusLabel.text = alarm.active ? "Active" : "Inactive"
+        if let eventTime = alarm.eventTime {
+            timeLabel.text = "Arrival: " + formatter.string(from: eventTime)
+        } else {
+            timeLabel.text = "Error fetching event time."
+        }
+        activeStatusLabel.text = alarm.active ? "On" : "Off"
         activeSwitch.isOn = alarm.active
         
         let camera = GMSCameraPosition.camera(withLatitude: alarm.latitude, longitude: alarm.longitude, zoom: 11)
@@ -43,7 +53,7 @@ class TimeFromLocationCell: UITableViewCell {
     @IBAction func activitySwitchChanged(_ sender: UISwitch) {
         guard let alarm = alarm else { return }
         alarm.active = activeSwitch.isOn
-        activeStatusLabel.text = alarm.active ? "Active" : "Inactive"
+        activeStatusLabel.text = alarm.active ? "On" : "Off"
         alarm.updating = alarm.active
         CoreDataHelper.saveAlarms()
     }

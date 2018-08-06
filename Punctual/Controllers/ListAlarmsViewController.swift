@@ -20,6 +20,9 @@ class ListAlarmsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        
+        alarmTableView.separatorStyle = .none
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -77,11 +80,13 @@ extension ListAlarmsViewController: UITableViewDataSource {
             let cell = tableView.dequeueReusableCell(withIdentifier: "SetTimeCell") as! SetTimeCell
             cell.alarm = alarm as? SetTime
             cell.configure()
+            UIHelper.addShadow(cell.containerView.layer)
             return cell
         case "TimeFromLocation":
             let cell = tableView.dequeueReusableCell(withIdentifier: "TimeFromLocationCell") as! TimeFromLocationCell
             cell.alarm = alarm as? TimeFromLocation
             cell.configure()
+            UIHelper.addShadow(cell.containerView.layer)
             return cell
         default:
             assertionFailure("Unexpected alarm type: \(type(of: alarm))")
@@ -105,6 +110,6 @@ extension ListAlarmsViewController: UITableViewDataSource {
 extension ListAlarmsViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 100
+        return 125
     }
 }

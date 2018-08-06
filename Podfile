@@ -12,5 +12,6 @@ target 'Punctual' do
   pod 'SwiftyJSON', '~> 4.1'
   pod 'Firebase/Core'
   pod 'Firebase/Messaging'
+  pod 'Firebase/Functions'
 
 end

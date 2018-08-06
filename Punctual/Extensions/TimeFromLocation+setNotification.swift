@@ -68,12 +68,30 @@ extension TimeFromLocation {
                         print("Ending check: shown today")
                         return
                     } else {
-                        if let eventTime = self.eventTime {
-                            if eventTime.addingTimeInterval(TimeInterval(-commuteTime)).timeIntervalSince1970 <= departureTime {
-                                triggerDate = Calendar.current.dateComponents([.year,.month,.day,.hour,.minute,.second,], from: Date())
+                        if var eventTime = self.eventTime {
+                            // set day of event time to today
+                            var eventTimeComponents = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute, .second,], from: eventTime)
+                            let todayComponents = Calendar.current.dateComponents([.year, .month, .day,], from: Date())
+                            eventTimeComponents.year = todayComponents.year
+                            eventTimeComponents.month = todayComponents.month
+                            eventTimeComponents.day = todayComponents.day
+                            if let newDate = Calendar.current.date(from: eventTimeComponents) {
+                                eventTime = newDate
                             } else {
-                                print("Ending check: it is not yet time to leave")
-                                return
+                                print("Ending check: bad newDate")
+                            }
+                            
+                            if eventTime.addingTimeInterval(TimeInterval(-commuteTime)).timeIntervalSince1970 <= departureTime {
+                                if eventTime.timeIntervalSince1970 <= departureTime {
+                                    print("Ending check: alarm was should have been activated too long ago")
+                                    return
+                                }
+                                print("Time is decided: Now")
+                                triggerDate = Calendar.current.dateComponents([.year,.month,.day,.hour,.minute,.second,], from: Date())
+                                // If the time that you must recieve the notification is greater than 5 minutes away, set it anyway; if it is later updated, it will be overwritten to a better time (improves accuracy with 5 minute updates)
+                            } else {
+                                print("Time is decided: a few minutes away")
+                                triggerDate = Calendar.current.dateComponents([.year,.month,.day,.hour,.minute,.second,], from: Date().addingTimeInterval(eventTime.addingTimeInterval(TimeInterval(-commuteTime)).timeIntervalSince1970 - departureTime))
                             }
                         } else {
                             print("Ending check: no eventTime")
@@ -84,17 +102,18 @@ extension TimeFromLocation {
                     // Check if alarm was already activated at all
                     if self.dateShown == nil {
                         if let eventTime = self.eventTime {
-                            // If the time that you must leave is less than 5 or equal to minutes away, send notification now
+                            // If the time that you must recieve the notification is less than 5 or equal to minutes away, send notification now
                             if eventTime.addingTimeInterval(TimeInterval(-commuteTime)).timeIntervalSince1970 <= departureTime {
+                                if eventTime.timeIntervalSince1970 <= departureTime {
+                                    print("Ending check: alarm was should have been activated too long ago")
+                                    return
+                                }
                                 print("Time is decided: Now")
                                 triggerDate = Calendar.current.dateComponents([.year,.month,.day,.hour,.minute,.second,], from: Date())
-                            // If the time that you must leave is greater than 5 minutes away but less than 10 minutes away, send notification at correct time (improve accuracy with 5 minute updates)
-                            } else if eventTime.addingTimeInterval(TimeInterval(-commuteTime)).timeIntervalSince1970 > departureTime && eventTime.addingTimeInterval(TimeInterval(-commuteTime)).timeIntervalSince1970 <= departureTime + 300{
+                                // If the time that you must recieve the notification is greater than 5 minutes away, set it anyway; if it is later updated, it will be overwritten to a better time (improves accuracy with 5 minute updates)
+                            } else {
                                 print("Time is decided: more than 5 minutes away")
                                 triggerDate = Calendar.current.dateComponents([.year,.month,.day,.hour,.minute,.second,], from: Date().addingTimeInterval(eventTime.addingTimeInterval(TimeInterval(-commuteTime)).timeIntervalSince1970 - departureTime))
-                            } else {
-                                print("Ending check: it is not yet time to leave")
-                                return
                             }
                             print("Required departure time: \(eventTime.addingTimeInterval(TimeInterval(-commuteTime)))")
                             print("Desired departure time: \(Date(timeIntervalSince1970: departureTime))")

@@ -14,15 +14,25 @@ import SwiftyJSON
 import UserNotifications
 
 class DisplayAlarmViewController: UIViewController, CLLocationManagerDelegate {
+    
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var arrivalTimeLabel: UILabel!
-    @IBOutlet weak var preparationTimeLabel: UILabel!
-    @IBOutlet weak var commuteTimeLabel: UILabel!
     
-    @IBOutlet weak var snoozeButton: UIButton!
-    @IBOutlet weak var dismissButton: UIButton!
+    @IBOutlet weak var commuteTimeLabel: UILabel!
+    @IBOutlet weak var preparationTimeLabel: UILabel!
     
     @IBOutlet weak var mapView: GMSMapView!
+    
+    @IBOutlet weak var titleContainerView: UIView!
+    @IBOutlet weak var arrivalTimeContainerView: UIView!
+    @IBOutlet weak var preparationTimeContainerView: UIView!
+    @IBOutlet weak var commuteTimeContainerView: UIView!
+    @IBOutlet weak var toGMSButton: UIButton!
+    @IBOutlet weak var snoozeButton: UIButton!
+    @IBOutlet weak var dismissButton: UIButton!
+    @IBOutlet weak var buttonsContainerView: UIView!
+    
+    
     
     var alarm: [String: Any]!
     let locationManager = CLLocationManager()
@@ -33,10 +43,13 @@ class DisplayAlarmViewController: UIViewController, CLLocationManagerDelegate {
     var type: String!
     var googleMapsURL: NSURL?
     
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         // Ask for Authorisation from the User.
+        setupLayers()
+        
         self.locationManager.requestAlwaysAuthorization()
         
         // For use in foreground
@@ -69,6 +82,27 @@ class DisplayAlarmViewController: UIViewController, CLLocationManagerDelegate {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    func setupLayers() {
+        titleContainerView.layer.cornerRadius = 4
+        arrivalTimeContainerView.layer.cornerRadius = 4
+        preparationTimeContainerView.layer.cornerRadius = 4
+        commuteTimeContainerView.layer.cornerRadius = 4
+        buttonsContainerView.layer.cornerRadius = 4
+        toGMSButton.layer.cornerRadius = 4
+        snoozeButton.layer.cornerRadius = 4
+        dismissButton.layer.cornerRadius = 4
+        
+        toGMSButton.titleLabel?.textAlignment = .center
+        
+        UIHelper.addShadow(titleContainerView.layer)
+        UIHelper.addShadow(preparationTimeContainerView.layer)
+        UIHelper.addShadow(commuteTimeContainerView.layer)
+        UIHelper.addShadow(toGMSButton.layer)
+        UIHelper.addShadow(dismissButton.layer)
+        UIHelper.addShadow(snoozeButton.layer)
+        
     }
     
     func configure() {
@@ -171,7 +205,7 @@ class DisplayAlarmViewController: UIViewController, CLLocationManagerDelegate {
         stopTimer()
     }
     
-    @IBAction func dismissPressed(_ sender: UIButton) {
+    @IBAction func dismissButtonPressed(_ sender: UIButton) {
         stopTimer()
         delegate?.toMainScreen()
         guard let id = alarm["id"] as? Int64 else {
@@ -181,11 +215,7 @@ class DisplayAlarmViewController: UIViewController, CLLocationManagerDelegate {
         CoreDataHelper.alarmWasShown(with: id)
     }
     
-    @IBAction func callSnoozePressed(_ sender: UIButton) {
-        snoozePressed()
-    }
-    
-    func snoozePressed() {
+    @IBAction func snoozePressed(_ sender: UIButton) {
         if type == "ST" {
             guard let id = alarm["id"] as? Int64 else {
                 print("Invalid alarm with id: \(alarm["id"] ?? "nil")")
@@ -219,7 +249,9 @@ class DisplayAlarmViewController: UIViewController, CLLocationManagerDelegate {
             delegate?.toMainScreen()
         }
     }
+    
     @IBAction func toGoogleMaps(_ sender: UIButton) {
+        print("it was at least pressed")
         if let url = googleMapsURL {
             UIApplication.shared.open(url as URL)
         }

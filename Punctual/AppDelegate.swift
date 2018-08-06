@@ -11,10 +11,11 @@ import CoreData
 import GoogleMaps
 import GooglePlaces
 import UserNotifications
+import Firebase
 import AudioToolbox
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate, CLLocationManagerDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate, CLLocationManagerDelegate, MessagingDelegate {
 
     var window: UIWindow?
     var ringingAlarm: Alarm?
@@ -34,7 +35,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         
         let center = UNUserNotificationCenter.current()
         center.delegate = self
-        let options: UNAuthorizationOptions = [.alert, .sound];
+        let options: UNAuthorizationOptions = [.alert, .badge, .sound];
         center.requestAuthorization(options: options) {
             (granted, error) in
             if !granted {
@@ -42,14 +43,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
             }
         }
         
-        // Update TimeFromLocation alarms in background once every 5 minutes
-        UIApplication.shared.setMinimumBackgroundFetchInterval(300)
+        application.registerForRemoteNotifications()
         
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
         locationManager.requestAlwaysAuthorization()
         locationManager.startUpdatingLocation()
-
+        
+        FirebaseApp.configure()
+        
+        Messaging.messaging().delegate = self
+        
         return true
     }
 
@@ -140,21 +144,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         }
     }
 
-
     // When a notification is recieved while app is open
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         print("Notification recieved")
         //Handle the notification
-        //This will get the text sent in your notification
-        
-        //This works for iphone 7 and above using haptic feedback
-        let feedbackGenerator = UINotificationFeedbackGenerator()
-        feedbackGenerator.notificationOccurred(.success)
-        
-        //This works for all devices. Choose one or the other.
-        AudioServicesPlayAlertSoundWithCompletion(SystemSoundID(kSystemSoundID_Vibrate), nil)
         
         if let alarm = notification.request.content.userInfo["alarm"] as? [String: Any] {
+            AudioServicesPlayAlertSoundWithCompletion(SystemSoundID(kSystemSoundID_Vibrate), nil)
             showAlarm(alarm: alarm)
         }
     }
@@ -173,17 +169,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         }
         completionHandler()
         
-    }
-    
-    func application(_ application: UIApplication,
-                     performFetchWithCompletionHandler completionHandler:
-        @escaping (UIBackgroundFetchResult) -> Void) {
-        if let fetchRequest = fetchRequest {
-            URLSession.shared.dataTask(with: fetchRequest) { data, response, error in }
-        }
-        
-        // Check TFL Alarms
-        TimeFromLocation.checkAlarms(locationManager.location?.coordinate)
     }
     
     func getMostRecentAlarm() -> Alarm? {
@@ -233,6 +218,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
             window?.rootViewController = initialViewController
             window?.makeKeyAndVisible()
         }
+    }
+    
+    func application(_ application: UIApplication,
+                     didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        Messaging.messaging().apnsToken = deviceToken
+    }
+    
+    func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String) {
+        print("fcm token:", fcmToken)
+        Messaging.messaging().subscribe(toTopic: "all")
     }
 }
 

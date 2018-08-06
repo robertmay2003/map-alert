@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		184BD2BC4768B33FF0350D37 /* Pods_Punctual.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4312F501F3F58A220F80DB3C /* Pods_Punctual.framework */; };
+		FA22FCB42118336D006FA8B4 /* UIHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA22FCB32118336D006FA8B4 /* UIHelper.swift */; };
+		FA22FCB62118CBD6006FA8B4 /* UIButton+setBackgroundColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA22FCB52118CBD6006FA8B4 /* UIButton+setBackgroundColor.swift */; };
 		FA7847E7210BB4F700A7D0CF /* Alarm+AlarmID.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA7847E6210BB4F700A7D0CF /* Alarm+AlarmID.swift */; };
 		FAA8A04121063F13008F0491 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAA8A04021063F13008F0491 /* AppDelegate.swift */; };
 		FAA8A04321063F13008F0491 /* ListAlarmsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAA8A04221063F13008F0491 /* ListAlarmsViewController.swift */; };
@@ -40,6 +42,8 @@
 		4312F501F3F58A220F80DB3C /* Pods_Punctual.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Punctual.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		93BCF9304B187269B94FDE37 /* Pods-Punctual.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Punctual.release.xcconfig"; path = "Pods/Target Support Files/Pods-Punctual/Pods-Punctual.release.xcconfig"; sourceTree = "<group>"; };
 		A39145EC361C157C022BC1FD /* Pods-Punctual.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Punctual.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Punctual/Pods-Punctual.debug.xcconfig"; sourceTree = "<group>"; };
+		FA22FCB32118336D006FA8B4 /* UIHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIHelper.swift; sourceTree = "<group>"; };
+		FA22FCB52118CBD6006FA8B4 /* UIButton+setBackgroundColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIButton+setBackgroundColor.swift"; sourceTree = "<group>"; };
 		FA7847E6210BB4F700A7D0CF /* Alarm+AlarmID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Alarm+AlarmID.swift"; sourceTree = "<group>"; };
 		FAA8A03D21063F13008F0491 /* Punctual.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Punctual.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FAA8A04021063F13008F0491 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -199,6 +203,7 @@
 			isa = PBXGroup;
 			children = (
 				FAA8A05B210644E2008F0491 /* CoreDataHelper.swift */,
+				FA22FCB32118336D006FA8B4 /* UIHelper.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -213,6 +218,7 @@
 				FAD0356C21124D1500A72243 /* TimeFromLocation+asDict.swift */,
 				FAD0356E21124D5C00A72243 /* TimeFromLocation+setNotification.swift */,
 				FAD0357021127BAD00A72243 /* TimeFromLocation+updatingAlarms.swift */,
+				FA22FCB52118CBD6006FA8B4 /* UIButton+setBackgroundColor.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -305,12 +311,18 @@
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-Punctual/Pods-Punctual-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
+				"${BUILT_PRODUCTS_DIR}/GoogleToolboxForMac/GoogleToolboxForMac.framework",
+				"${BUILT_PRODUCTS_DIR}/Protobuf/Protobuf.framework",
 				"${BUILT_PRODUCTS_DIR}/SwiftyJSON/SwiftyJSON.framework",
+				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleToolboxForMac.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Protobuf.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftyJSON.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -365,9 +377,11 @@
 				FAFCED732106E07200A7204F /* AlarmTypeSelectionViewController.swift in Sources */,
 				FAFCED672106705A00A7204F /* TimeFromLocationCell.swift in Sources */,
 				FAD035692111165600A72243 /* SetTime+setNotification.swift in Sources */,
+				FA22FCB42118336D006FA8B4 /* UIHelper.swift in Sources */,
 				FAD0356D21124D1500A72243 /* TimeFromLocation+asDict.swift in Sources */,
 				FAD03575211283A600A72243 /* IdentifiedLocationManager.swift in Sources */,
 				FAE4EC702109197300A0CC1D /* GMSTestViewController.swift in Sources */,
+				FA22FCB62118CBD6006FA8B4 /* UIButton+setBackgroundColor.swift in Sources */,
 				FAA8A05E2106457A008F0491 /* GoogleMapsService.swift in Sources */,
 				FAFCED772107A52500A7204F /* EditSetTimeAlarmViewController.swift in Sources */,
 				FA7847E7210BB4F700A7D0CF /* Alarm+AlarmID.swift in Sources */,

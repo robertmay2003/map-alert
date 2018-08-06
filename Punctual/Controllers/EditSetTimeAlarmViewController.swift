@@ -17,7 +17,7 @@ class EditSetTimeAlarmViewController: UIViewController {
     @IBOutlet weak var activeStatusLabel: UILabel!
     
     @IBOutlet weak var locationMapView: GMSMapView!
-    @IBOutlet weak var addressTextField: UITextField!
+    @IBOutlet weak var addressTextField: UILabel!
     
     @IBOutlet weak var arrivalTimeDatePicker: UIDatePicker!
     @IBOutlet weak var alarmTimeDatePicker: UIDatePicker!
@@ -28,6 +28,21 @@ class EditSetTimeAlarmViewController: UIViewController {
     @IBOutlet weak var repetitionsTextField: UITextField!
     @IBOutlet weak var customMessageTextField: UITextView!
     
+    @IBOutlet weak var titleContainerView: UIView!
+    @IBOutlet weak var destinationContainerView: UIView!
+    @IBOutlet weak var timesContainerView: UIView!
+    @IBOutlet weak var arrivalTimeContainerView: UIView!
+    @IBOutlet weak var alarmTimeContainerView: UIView!
+    @IBOutlet weak var transportationContainerView: UIView!
+    @IBOutlet weak var notificationSettingsContainerView: UIView!
+    @IBOutlet weak var innerNotificationSettingsContainerView: UIView!
+    @IBOutlet weak var dailyContainerView: UIView!
+    @IBOutlet weak var repeatsContainerView: UIView!
+    @IBOutlet weak var customMessageContainerView: UIView!
+    @IBOutlet weak var arrivalTimeDatePickerContainerView: UIView!
+    @IBOutlet weak var alarmTimeDatePickerContainerView: UIView!
+    @IBOutlet weak var saveButton: UIButton!
+    
     let locationManager = CLLocationManager()
     var mapMarker = GMSMarker()
     var alarm: SetTime?
@@ -36,6 +51,8 @@ class EditSetTimeAlarmViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        
+        setupLayers()
         
         if alarm == nil {
             locationMapView?.isMyLocationEnabled = true
@@ -81,13 +98,51 @@ class EditSetTimeAlarmViewController: UIViewController {
         setupKeyboard()
     }
     
+    func setupLayers() {
+        titleContainerView.layer.cornerRadius = 4
+        destinationContainerView.layer.cornerRadius = 4
+        timesContainerView.layer.cornerRadius = 4
+        transportationContainerView.layer.cornerRadius = 4
+        notificationSettingsContainerView.layer.cornerRadius = 4
+        innerNotificationSettingsContainerView.layer.cornerRadius = 4
+        saveButton.layer.cornerRadius = 4
+        
+        UIHelper.addShadow(titleContainerView.layer)
+        UIHelper.addShadow(saveButton.layer)
+        UIHelper.addShadow(notificationSettingsContainerView.layer)
+        UIHelper.addShadow(destinationContainerView.layer)
+        
+        locationMapView.layer.cornerRadius = 4
+        addressTextField.layer.cornerRadius = 4
+        arrivalTimeContainerView.layer.cornerRadius = 4
+        alarmTimeContainerView.layer.cornerRadius = 4
+        dailyContainerView.layer.cornerRadius = 4
+        repeatsContainerView.layer.cornerRadius = 4
+        customMessageContainerView.layer.cornerRadius = 4
+        
+        UIHelper.addShadow(arrivalTimeContainerView.layer)
+        UIHelper.addShadow(alarmTimeContainerView.layer)
+        UIHelper.addShadow(dailyContainerView.layer)
+        UIHelper.addShadow(repeatsContainerView.layer)
+        UIHelper.addShadow(customMessageContainerView.layer)
+        
+        customMessageTextField.layer.cornerRadius = 4
+        arrivalTimeDatePickerContainerView.layer.cornerRadius = 4
+        alarmTimeDatePickerContainerView.layer.cornerRadius = 4
+        
+        notificationSettingsContainerView.layer.borderWidth = 3
+        let borderColor = UIColor(displayP3Red: 165/255, green: 204/255, blue: 236/255, alpha: 1)
+        notificationSettingsContainerView.layer.borderColor = borderColor.cgColor
+        
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
     
     @IBAction func switchPressed(_ sender: UISwitch) {
-        activeStatusLabel.text = activeSwitch.isOn ? "Active" : "Inactive"
+        activeStatusLabel.text = activeSwitch.isOn ? "On" : "Off"
     }
     
     func saveAlarm() -> Bool {

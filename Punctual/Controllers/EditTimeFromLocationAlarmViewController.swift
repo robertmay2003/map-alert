@@ -18,11 +18,11 @@ class EditTimeFromLocationAlarmViewController: UIViewController {
     @IBOutlet weak var activeStatusLabel: UILabel!
     
     @IBOutlet weak var startingLocationMapView: IdentifiedMapView!
-    @IBOutlet weak var startingAddressTextField: UITextField!
+    @IBOutlet weak var startingAddressTextField: UILabel!
     @IBOutlet weak var useMyLocationSwitch: UISwitch!
     
     @IBOutlet weak var destinationMapView: IdentifiedMapView!
-    @IBOutlet weak var destinationTextField: UITextField!
+    @IBOutlet weak var destinationTextField: UILabel!
     
     @IBOutlet weak var arrivalTimeDatePicker: UIDatePicker!
     @IBOutlet weak var marginDatePicker: UIDatePicker!
@@ -32,6 +32,22 @@ class EditTimeFromLocationAlarmViewController: UIViewController {
     @IBOutlet weak var dailySwitch: UISwitch!
     @IBOutlet weak var repetitionsTextField: UITextField!
     @IBOutlet weak var customMessageTextField: UITextView!
+    
+    @IBOutlet weak var titleContainerView: UIView!
+    @IBOutlet weak var destinationContainerView: UIView!
+    @IBOutlet weak var originContainerView: UIView!
+    @IBOutlet weak var timeContainerView: UIView!
+    @IBOutlet weak var arrivalTimeContainerView: UIView!
+    @IBOutlet weak var marginContainerView: UIView!
+    @IBOutlet weak var arrivalTimeDatePickerContainerView: UIView!
+    @IBOutlet weak var marginDatePickerContainerView: UIView!
+    @IBOutlet weak var transportationContainerView: UIView!
+    @IBOutlet weak var notificationSettingsContainerView: UIView!
+    @IBOutlet weak var innerNotificationSettingsContainerView: UIView!
+    @IBOutlet weak var dailyContainerView: UIView!
+    @IBOutlet weak var repeatsContainerView: UIView!
+    @IBOutlet weak var customMessageContainerView: UIView!
+    @IBOutlet weak var saveButton: UIButton!
     
     let startingLocationManager = IdentifiedLocationManager()
     let destinationManager = IdentifiedLocationManager()
@@ -43,6 +59,7 @@ class EditTimeFromLocationAlarmViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        setupLayers()
         
         if alarm == nil {
             startingLocationMapView?.isMyLocationEnabled = true
@@ -96,17 +113,59 @@ class EditTimeFromLocationAlarmViewController: UIViewController {
             
             let coordinate = CLLocationCoordinate2D(latitude: alarm.originLatitude, longitude: alarm.originLongitude)
             
-            reverseGeocodeCoordinate(coordinate, marker: originMarker, textField: startingAddressTextField)
+            reverseGeocodeCoordinate(coordinate, marker: originMarker, label: startingAddressTextField)
             startingLocationMapView.camera = GMSCameraPosition(target: coordinate, zoom: 15, bearing: 0, viewingAngle: 0)
             
             let destinationCoordinate = CLLocationCoordinate2D(latitude: alarm.latitude, longitude: alarm.longitude)
             
-            reverseGeocodeCoordinate(destinationCoordinate, marker: destinationMarker, textField: destinationTextField)
+            reverseGeocodeCoordinate(destinationCoordinate, marker: destinationMarker, label: destinationTextField)
             destinationMapView.camera = GMSCameraPosition(target: destinationCoordinate, zoom: 15, bearing: 0, viewingAngle: 0)
         }
         
         // Set keyboard hiding
         setupKeyboard()
+    }
+    
+    func setupLayers() {
+        titleContainerView.layer.cornerRadius = 4
+        destinationContainerView.layer.cornerRadius = 4
+        originContainerView.layer.cornerRadius = 4
+        timeContainerView.layer.cornerRadius = 4
+        transportationContainerView.layer.cornerRadius = 4
+        notificationSettingsContainerView.layer.cornerRadius = 4
+        innerNotificationSettingsContainerView.layer.cornerRadius = 4
+        saveButton.layer.cornerRadius = 4
+        
+        UIHelper.addShadow(titleContainerView.layer)
+        UIHelper.addShadow(saveButton.layer)
+        UIHelper.addShadow(notificationSettingsContainerView.layer)
+        UIHelper.addShadow(destinationContainerView.layer)
+        UIHelper.addShadow(originContainerView.layer)
+        
+        destinationMapView.layer.cornerRadius = 4
+        startingLocationMapView.layer.cornerRadius = 4
+        startingAddressTextField.layer.cornerRadius = 4
+        destinationTextField.layer.cornerRadius = 4
+        arrivalTimeContainerView.layer.cornerRadius = 4
+        marginContainerView.layer.cornerRadius = 4
+        dailyContainerView.layer.cornerRadius = 4
+        repeatsContainerView.layer.cornerRadius = 4
+        customMessageContainerView.layer.cornerRadius = 4
+
+        UIHelper.addShadow(arrivalTimeContainerView.layer)
+        UIHelper.addShadow(marginContainerView.layer)
+        UIHelper.addShadow(dailyContainerView.layer)
+        UIHelper.addShadow(repeatsContainerView.layer)
+        UIHelper.addShadow(customMessageContainerView.layer)
+
+        customMessageTextField.layer.cornerRadius = 4
+        arrivalTimeDatePickerContainerView.layer.cornerRadius = 4
+        marginDatePickerContainerView.layer.cornerRadius = 4
+        
+        notificationSettingsContainerView.layer.borderWidth = 3
+        let borderColor = UIColor(displayP3Red: 165/255, green: 204/255, blue: 236/255, alpha: 1)
+        notificationSettingsContainerView.layer.borderColor = borderColor.cgColor
+        
     }
     
     override func didReceiveMemoryWarning() {
@@ -210,9 +269,9 @@ class EditTimeFromLocationAlarmViewController: UIViewController {
         }
     }
     
-    private func reverseGeocodeCoordinate(_ coordinate: CLLocationCoordinate2D, marker: GMSMarker, textField: UITextField) {
+    private func reverseGeocodeCoordinate(_ coordinate: CLLocationCoordinate2D, marker: GMSMarker, label: UILabel) {
         GoogleMapsService.getAddress(at: coordinate) { (address) in
-            textField.text = address
+            label.text = address
         }
         
         marker.position = CLLocationCoordinate2D(latitude: coordinate.latitude, longitude: coordinate.longitude)
@@ -251,7 +310,7 @@ extension EditTimeFromLocationAlarmViewController: GMSMapViewDelegate {
     func mapView(_ mapView: GMSMapView, idleAt position: GMSCameraPosition) {
         guard let mapView = mapView as? IdentifiedMapView else { return }
         if let marker = mapView.marker {
-            reverseGeocodeCoordinate(position.target, marker: marker, textField: mapView.name == "destination" ? destinationTextField : startingAddressTextField)
+            reverseGeocodeCoordinate(position.target, marker: marker, label: mapView.name == "destination" ? destinationTextField : startingAddressTextField)
         }
     }
 }
